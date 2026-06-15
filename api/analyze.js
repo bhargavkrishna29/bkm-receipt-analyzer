@@ -51,10 +51,12 @@ If you cannot read the receipt clearly, set confidence to "low" and fill what yo
     let receiptData;
     try {
       const rawText = extractionResult.response.text();
+      console.log("[EXTRACT] Raw response:", rawText.substring(0, 200));
       const clean = rawText.replace(/```json|```/g, "").trim();
       receiptData = JSON.parse(clean);
     } catch (parseError) {
-      return res.status(422).json({ error: "Could not parse receipt data. Please try a clearer image." });
+      console.error("[EXTRACT] Parse error:", parseError.message, "Response:", rawText?.substring(0, 300));
+      return res.status(422).json({ error: "Could not parse receipt data. Please try a clearer image.", debug: rawText?.substring(0, 100) });
     }
 
     // Step 2: Quick insight if we have existing expenses
@@ -65,8 +67,10 @@ If you cannot read the receipt clearly, set confidence to "low" and fill what yo
 
     return res.status(200).json({ success: true, receipt: receiptData, insights });
   } catch (error) {
-    console.error("Analysis error:", error);
-    return res.status(500).json({ error: "Failed to analyze receipt. Please try again." });
+    console.error("Analysis error:", error.message, error.stack);
+    const msg = error.message || "Failed to analyze receipt";
+    const status = msg.includes("API key") ? 401 : 500;
+    return res.status(status).json({ error: msg });
   }
 }
 
@@ -102,8 +106,10 @@ Respond ONLY with a valid JSON object, no markdown:
 
   try {
     const raw = result.response.text();
+    console.log("[INSIGHTS] Raw response:", raw.substring(0, 200));
     return JSON.parse(raw.replace(/```json|```/g, "").trim());
-  } catch {
+  } catch (err) {
+    console.error("[INSIGHTS] Parse error:", err.message, "Response:", raw?.substring(0, 300));
     return null;
   }
 }

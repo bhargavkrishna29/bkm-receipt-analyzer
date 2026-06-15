@@ -34,8 +34,15 @@ async function handleAnalyze(body) {
 Total must be a number, not a string.`,
   ]);
 
-  const rawText = extractionResult.response.text();
-  const receiptData = JSON.parse(rawText.replace(/```json|```/g, "").trim());
+  let receiptData;
+  try {
+    const rawText = extractionResult.response.text();
+    console.log("[EXTRACT] Raw response:", rawText.substring(0, 200));
+    receiptData = JSON.parse(rawText.replace(/```json|```/g, "").trim());
+  } catch (parseError) {
+    console.error("[EXTRACT] Parse error:", parseError.message, "Response:", rawText?.substring(0, 300));
+    throw new Error(`Failed to parse receipt: ${parseError.message}`);
+  }
 
   let insights = null;
   if (existingExpenses && existingExpenses.length > 0) {
@@ -52,8 +59,13 @@ Total must be a number, not a string.`,
 {"topCategory":"...","topCategoryPercent":0,"tips":[],"savingOpportunity":"...","budgetSuggestion":"..."}`
     );
     try {
-      insights = JSON.parse(insightResult.response.text().replace(/```json|```/g, "").trim());
-    } catch { }
+      const raw = insightResult.response.text();
+      console.log("[INSIGHTS] Raw response:", raw.substring(0, 200));
+      insights = JSON.parse(raw.replace(/```json|```/g, "").trim());
+    } catch (err) {
+      console.error("[INSIGHTS] Parse error:", err.message, "Response:", raw?.substring(0, 300));
+      insights = null;
+    }
   }
 
   return { success: true, receipt: receiptData, insights };
