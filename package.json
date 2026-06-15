@@ -1,0 +1,17 @@
+{
+  "name": "receipt-analyzer",
+  "version": "1.0.0",
+  "description": "AI-powered receipt analyzer and expense tracker",
+  "main": "api/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env api/server.js",
+    "start": "node api/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

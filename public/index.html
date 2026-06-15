@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spendwise — Receipt Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">Spendwise</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-ghost" id="setBudgetBtn">Set Budget</button>
+        <button class="btn-primary" id="getInsightsBtn" disabled>
+          <span>Full Report</span>
+          <span class="receipt-count" id="receiptCountBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Upload Zone -->
+    <section class="upload-section">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-idle" id="uploadIdle">
+          <div class="upload-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="4" width="24" height="32" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M32 4l8 8H32V4z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M20 20v10M15 25l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="upload-headline">Drop a receipt here</p>
+          <p class="upload-sub">or <label for="fileInput" class="upload-link">browse files</label></p>
+          <p class="upload-formats">JPG, PNG, WEBP, PDF · up to 10MB</p>
+        </div>
+        <div class="upload-processing hidden" id="uploadProcessing">
+          <div class="spinner"></div>
+          <p class="processing-text">Reading your receipt<span class="dots"></span></p>
+        </div>
+        <input type="file" id="fileInput" accept="image/*,.pdf" class="file-input" />
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="stats-bar hidden" id="statsBar">
+      <div class="stat-card">
+        <span class="stat-label">Total Spent</span>
+        <span class="stat-value" id="totalSpent">0.00</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-card">
+        <span class="stat-label">Receipts</span>
+        <span class="stat-value" id="receiptCount">0</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-card">
+        <span class="stat-label">Top Category</span>
+        <span class="stat-value" id="topCategory">—</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-card">
+        <span class="stat-label">Budget Left</span>
+        <span class="stat-value" id="budgetLeft">—</span>
+      </div>
+    </section>
+
+    <!-- Category Breakdown Chart -->
+    <section class="chart-section hidden" id="chartSection">
+      <h2 class="section-title">Where your money goes</h2>
+      <div class="chart-layout">
+        <canvas id="donutChart" width="220" height="220"></canvas>
+        <div class="chart-legend" id="chartLegend"></div>
+      </div>
+    </section>
+
+    <!-- Receipts List -->
+    <section class="receipts-section hidden" id="receiptsSection">
+      <div class="section-header">
+        <h2 class="section-title">Receipts</h2>
+        <button class="btn-danger-ghost" id="clearAllBtn">Clear all</button>
+      </div>
+      <div class="receipts-list" id="receiptsList"></div>
+    </section>
+
+    <!-- Quick Tip -->
+    <div class="quick-tip hidden" id="quickTip">
+      <span class="tip-icon">💡</span>
+      <p class="tip-text" id="tipText"></p>
+    </div>
+  </main>
+
+  <!-- Full Report Modal -->
+  <div class="modal-overlay hidden" id="reportModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Monthly Report</h2>
+        <button class="modal-close" id="closeModal">✕</button>
+      </div>
+      <div class="modal-body" id="reportBody">
+        <div class="report-loading">
+          <div class="spinner"></div>
+          <p>Analyzing your spending patterns<span class="dots"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget Modal -->
+  <div class="modal-overlay hidden" id="budgetModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 class="modal-title">Monthly Budget</h2>
+        <button class="modal-close" id="closeBudgetModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Set your monthly spending limit to track how much you have left.</p>
+        <div class="input-group">
+          <label class="input-label">Amount</label>
+          <input type="number" id="budgetInput" class="input-field" placeholder="e.g. 3000" min="0" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="cancelBudget">Cancel</button>
+          <button class="btn-primary" id="saveBudget">Save Budget</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast hidden" id="toast">
+    <span id="toastMsg"></span>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
