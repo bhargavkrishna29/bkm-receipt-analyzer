@@ -340,7 +340,7 @@ JSON:
 
 // ── HTTP Server ──
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url);
+  const url = new URL(req.url, `http://localhost:3000`);
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
