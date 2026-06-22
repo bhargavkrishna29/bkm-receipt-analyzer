@@ -6,12 +6,17 @@
   "type": "module",
   "scripts": {
     "dev": "node --env-file=.env api/server.js",
-    "start": "node api/server.js"
+    "start": "node api/server.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.103.0"
   }
 }
