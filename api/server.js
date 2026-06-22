@@ -340,7 +340,7 @@ JSON:
 
 // ── HTTP Server ──
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `https://bkm-receipt-analyzer.vercel.app`);
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
