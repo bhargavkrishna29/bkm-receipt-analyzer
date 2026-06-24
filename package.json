@@ -9,7 +9,8 @@
     "start": "node api/server.js"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.0"
+    "@google/generative-ai": "^0.24.0",
+    "firebase-admin": "^14.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
