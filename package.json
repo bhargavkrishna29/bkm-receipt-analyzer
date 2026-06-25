@@ -1,16 +1,26 @@
 {
-  "name": "receipt-analyzer",
-  "version": "1.0.0",
-  "description": "AI-powered receipt analyzer and expense tracker",
-  "main": "api/server.js",
-  "type": "module",
+  "name": "spendwise",
+  "version": "2.0.0",
+  "private": true,
+  "description": "AI-powered receipt analyzer and expense tracker — Next.js + TypeScript",
   "scripts": {
-    "dev": "node --env-file=.env api/server.js",
-    "start": "node api/server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
-    "firebase-admin": "^14.0.0"
+    "firebase": "^11.0.0",
+    "next": "^15.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">=18.0.0"

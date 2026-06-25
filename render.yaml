@@ -1,0 +1,42 @@
+# render.yaml — Spendwise deployment configuration for Render
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: spendwise
+    runtime: node
+    plan: free
+
+    # Build & start — Next.js
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    # Health check
+    healthCheckPath: /api/health
+
+    # Auto-deploy when you push to main
+    autoDeploy: true
+
+    # Environment variables (set secret values in the Render dashboard)
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Rate limiting
+      - key: RATE_LIMIT_MAX
+        value: "10"
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "3600000"
+
+      # Set these as SECRET in the Render dashboard:
+      # - key: GEMINI_API_KEY
+      # - key: GEMINI_MODEL  (optional, defaults to gemini-2.5-flash-lite)
+
+      # Firebase client config (NEXT_PUBLIC_ prefix required for browser exposure)
+      # - key: NEXT_PUBLIC_FIREBASE_API_KEY
+      # - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+      # - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      # - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+      # - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+      # - key: NEXT_PUBLIC_FIREBASE_APP_ID
+      # - key: NEXT_PUBLIC_FIREBASE_DATABASE_ID

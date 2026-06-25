@@ -1,14 +1,52 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read/write their own data
+
+    // ── User profile & budget ───────────────────────────────────────────────────
     match /users/{userId} {
-      // Allow reading/writing the user's own profile document (e.g. budget)
       allow read, write: if request.auth != null && request.auth.uid == userId;
 
-      // Allow reading/writing the user's own receipts subcollection
+      // ── Receipts subcollection ────────────────────────────────────────────────
       match /receipts/{receiptId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
+        // Read: owner only
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        // Create: owner only + validate receipt structure
+        allow create: if request.auth != null
+          && request.auth.uid == userId
+          // Required fields must be present
+          && request.resource.data.keys().hasAll(['merchant', 'date', 'total', 'items', 'currency'])
+          // total must be a valid number within a sane range
+          && request.resource.data.total is number
+          && request.resource.data.total >= 0
+          && request.resource.data.total <= 500000
+          // items must be a list (not a map / null)
+          && request.resource.data.items is list;
+
+        // Update: owner only (allow corrections / edits)
+        allow update: if request.auth != null && request.auth.uid == userId;
+
+        // Delete: owner only
+        allow delete: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // ── Audit log subcollection ───────────────────────────────────────────────
+      // Append-only — users can write new entries but NEVER modify or delete them.
+      // This ensures a tamper-proof trail of significant actions.
+      match /auditLog/{logId} {
+        // Owner can read their own audit log
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        // Owner can create new entries (append-only)
+        allow create: if request.auth != null
+          && request.auth.uid == userId
+          // Enforce required fields on every audit entry
+          && request.resource.data.keys().hasAll(['action', 'timestamp', 'uid'])
+          // Prevent spoofing: uid in the document must match the authenticated user
+          && request.resource.data.uid == request.auth.uid;
+
+        // No one can update or delete audit log entries (tamper-proof)
+        allow update, delete: if false;
       }
     }
   }
