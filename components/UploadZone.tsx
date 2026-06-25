@@ -52,7 +52,7 @@ export default function UploadZone({ expenses, onReceiptAdded, onQuickTip, onToa
 
       const receipt = data.receipt!;
 
-      const { saveReceipt } = await import('@/lib/firestore');
+      const { saveReceipt } = await import('@/app/actions/db');
       const saved = await saveReceipt({
         merchant: String(receipt.merchant ?? 'Unknown'),
         date: String(receipt.date ?? new Date().toISOString().split('T')[0]),

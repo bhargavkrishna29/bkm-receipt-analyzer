@@ -3,7 +3,7 @@
     "providers": {
       "emailPassword": true,
       "googleSignIn": {
-        "oAuthBrandDisplayName": "Spendwise",
+        "oAuthBrandDisplayName": "Lekha Tracker",
         "supportEmail": "bhargav.cit@gmail.com"
       }
     }

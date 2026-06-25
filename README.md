@@ -1,4 +1,4 @@
-# Spendwise — AI Receipt Analyzer
+# Lekha Tracker — AI Receipt Analyzer
 
 Upload your receipts and get AI-powered insights on where you're overspending and how to balance your monthly budget.
 

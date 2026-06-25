@@ -1,9 +1,9 @@
-# render.yaml — Spendwise deployment configuration for Render
+# render.yaml — Lekha Tracker deployment configuration for Render
 # https://render.com/docs/blueprint-spec
 
 services:
   - type: web
-    name: spendwise
+    name: lekha-tracker
     runtime: node
     plan: free
 

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import type { User } from 'firebase/auth';
+import Image from 'next/image';
+import { useSession, signOut } from 'next-auth/react';
 import type { Receipt, Filters, QuickInsights } from '@/types';
 import { CATEGORY_COLORS, ITEM_CAT_COLORS } from '@/types';
 
@@ -57,9 +58,11 @@ function applyFilters(expenses: Receipt[], filters: Filters): Receipt[] {
   return filtered;
 }
 
-export default function SpendwisePage() {
-  const [authLoading, setAuthLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+export default function LekhaTrackerPage() {
+  const { data: session, status } = useSession();
+  const authLoading = status === 'loading';
+  const user = session?.user;
+  
   const [expenses, setExpenses] = useState<Receipt[]>([]);
   const [budget, setBudget] = useState(0);
   const [filters, setFilters] = useState<Filters>({ months: 3, category: 'All', sort: 'newest' });
@@ -70,43 +73,26 @@ export default function SpendwisePage() {
 
   const displayExpenses = useMemo(() => applyFilters(expenses, filters), [expenses, filters]);
 
-  // ── Auth state listener ──────────────────────────────────────────────────────
+  // ── Auth state & Initial Data Load ───────────────────────────────────────────
   useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-
-    (async () => {
-      const { observeAuthState } = await import('@/lib/auth');
-      const { saveProfileData, loadProfile, loadReceipts } = await import('@/lib/firestore');
-
-      unsubscribe = observeAuthState(async (firebaseUser) => {
-        setAuthLoading(false);
-
-        if (firebaseUser) {
-          setUser(firebaseUser);
-          try {
-            showToast('Loading your receipts…');
-            await saveProfileData({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email,
-              displayName: firebaseUser.displayName,
-            });
-            const [profile, receipts] = await Promise.all([loadProfile(), loadReceipts(3)]);
-            setBudget(profile?.budget ?? 0);
-            setExpenses(receipts);
-            showToast(`Welcome back! ${receipts.length} receipt${receipts.length !== 1 ? 's' : ''} loaded.`);
-          } catch (err) {
-            showToast('⚠️ ' + (err as Error).message);
-          }
-        } else {
-          setUser(null);
-          setExpenses([]);
-          setBudget(0);
+    if (status === 'authenticated') {
+      (async () => {
+        try {
+          showToast('Loading your receipts…');
+          const { loadProfile, loadReceipts } = await import('@/app/actions/db');
+          const [profile, receipts] = await Promise.all([loadProfile(), loadReceipts(3)]);
+          setBudget(profile?.budget ?? 0);
+          setExpenses(receipts);
+          showToast(`Welcome back! ${receipts.length} receipt${receipts.length !== 1 ? 's' : ''} loaded.`);
+        } catch (err) {
+          showToast('⚠️ ' + (err as Error).message);
         }
-      });
-    })();
-
-    return () => { unsubscribe?.(); };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+      })();
+    } else if (status === 'unauthenticated') {
+      setExpenses([]);
+      setBudget(0);
+    }
+  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
   function handleReceiptAdded(receipt: Receipt) {
@@ -115,7 +101,7 @@ export default function SpendwisePage() {
 
   async function handleRemove(id: string) {
     try {
-      const { deleteReceipt } = await import('@/lib/firestore');
+      const { deleteReceipt } = await import('@/app/actions/db');
       await deleteReceipt(id);
       setExpenses((prev) => prev.filter((e) => e.id !== id));
       showToast('Receipt removed.');
@@ -127,7 +113,7 @@ export default function SpendwisePage() {
   async function handleClearAll() {
     if (!confirm('Remove all receipts? This cannot be undone.')) return;
     try {
-      const { deleteReceipt } = await import('@/lib/firestore');
+      const { deleteReceipt } = await import('@/app/actions/db');
       await Promise.all(expenses.map((e) => deleteReceipt(e.id)));
       setExpenses([]);
       setQuickTip(null);
@@ -139,7 +125,7 @@ export default function SpendwisePage() {
 
   async function handleSaveBudget(val: number) {
     try {
-      const { saveBudget } = await import('@/lib/firestore');
+      const { saveBudget } = await import('@/app/actions/db');
       await saveBudget(val);
       setBudget(val);
       showToast(`Budget set to ${val.toFixed(2)}`);
@@ -149,7 +135,6 @@ export default function SpendwisePage() {
   }
 
   async function handleSignOut() {
-    const { signOut } = await import('@/lib/auth');
     await signOut();
   }
 
@@ -178,15 +163,15 @@ export default function SpendwisePage() {
   const itemTotal = useMemo(() => itemCatEntries.reduce((s, [, v]) => s + v, 0), [itemCatEntries]);
 
   const hasExpenses = displayExpenses.length > 0;
-  const initials = user ? (user.displayName ?? user.email ?? '?')[0].toUpperCase() : '?';
-  const displayName = user ? (user.displayName ?? user.email?.split('@')[0] ?? '') : '';
-  const showEmailVerifyNotice = user && !user.emailVerified && user.providerData[0]?.providerId === 'password';
+  const initials = user ? (user.name ?? user.email ?? '?')[0].toUpperCase() : '?';
+  const displayName = user ? (user.name ?? user.email?.split('@')[0] ?? '') : '';
+
 
   // ── Render ────────────────────────────────────────────────────────────────────
   if (authLoading) return <LoadingOverlay />;
   if (!user) return (
     <>
-      <AuthScreen onToast={showToast} />
+      <AuthScreen />
       {toastVisible && (
         <div className="toast"><span>{toastMessage}</span></div>
       )}
@@ -200,8 +185,14 @@ export default function SpendwisePage() {
         <header className="header">
           <div className="header-inner">
             <div className="logo">
-              <span className="logo-icon">◈</span>
-              <span className="logo-text">Spendwise</span>
+              <Image
+                src="/logo.png"
+                alt="Lekha Tracker"
+                width={120}
+                height={40}
+                className="logo-img"
+                priority
+              />
             </div>
             <div className="header-actions">
               <div className="user-info" id="userInfo">
@@ -227,19 +218,7 @@ export default function SpendwisePage() {
           </div>
         </header>
 
-        {/* Email verification notice */}
-        {showEmailVerifyNotice && (
-          <div className="verify-notice" id="verifyNotice">
-            📧 Please verify your email address to ensure full access.
-            <button className="btn-text" id="resendNoticeBtn" onClick={async () => {
-              const { resendVerificationEmail } = await import('@/lib/auth');
-              try { await resendVerificationEmail(); showToast('Verification email resent ✓'); }
-              catch (err) { showToast('Failed to resend: ' + (err as Error).message); }
-            }}>
-              Resend email
-            </button>
-          </div>
-        )}
+
 
         <main className="main">
           <UploadZone

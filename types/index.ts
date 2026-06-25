@@ -1,4 +1,4 @@
-// types/index.ts — shared TypeScript types for Spendwise
+// types/index.ts — shared TypeScript types for Lekha Tracker
 
 export interface ReceiptItem {
   name: string;
@@ -27,7 +27,7 @@ export interface UserProfile {
   email: string | null;
   displayName: string | null;
   budget?: number;
-  lastLoginAt?: unknown;
+  lastLoginAt?: number;
 }
 
 // ── Gemini AI response shapes ──────────────────────────────────────────────

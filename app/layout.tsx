@@ -1,9 +1,32 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Providers } from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'Spendwise — Receipt Analyzer',
-  description: 'Upload receipts, track spending, and get AI-powered insights on your expenses. Sign up free.',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL ?? 'https://lekhatracker.app'
+  ),
+  title: 'Lekha Tracker — Receipt Analyzer',
+  description:
+    'Upload receipts, track spending, and get AI-powered insights on your expenses. Sign up free.',
+  icons: {
+    icon: [
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Lekha Tracker',
+    description: 'Upload receipts, track spending, and get AI-powered insights.',
+    images: [{ url: '/logo.png', width: 1024, height: 1024, alt: 'Lekha Tracker Logo' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Lekha Tracker',
+    description: 'Upload receipts, track spending, and get AI-powered insights.',
+    images: ['/logo.png'],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +39,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
