@@ -6,3 +6,5 @@ serviceAccountKey*.json
 package-lock.json
 .firebaserc
 .next/
+.DS_Store
+.browserslistrc

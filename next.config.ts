@@ -13,6 +13,25 @@ const nextConfig: NextConfig = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_DATABASE_ID: process.env.FIREBASE_DATABASE_ID,
   },
+  webpack(config) {
+    // Force Browserslist to resolve from the project root only,
+    // preventing it from walking up to the OneDrive parent package.json.
+    for (const rule of config.module?.rules ?? []) {
+      if (rule && typeof rule === 'object' && rule.use) {
+        const uses = Array.isArray(rule.use) ? rule.use : [rule.use];
+        for (const u of uses) {
+          if (u && typeof u === 'object' && u.options?.browserslist) {
+            u.options.browserslist = undefined;
+          }
+        }
+      }
+    }
+    // Disable webpack cache to prevent "Unable to snapshot resolve dependencies"
+    // errors caused by OneDrive's file-on-demand syncing mechanisms.
+    config.cache = false;
+
+    return config;
+  },
 };
 
 export default nextConfig;
