@@ -11,6 +11,16 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+if (!firebaseConfig.apiKey) {
+  console.warn(
+    'Firebase API Key is missing! Make sure to set NEXT_PUBLIC_FIREBASE_API_KEY in your Vercel Environment Variables.'
+  );
+}
+
+const app = getApps().length
+  ? getApps()[0]
+  : initializeApp(
+      firebaseConfig.apiKey ? firebaseConfig : { ...firebaseConfig, apiKey: 'dummy-key-to-prevent-crash' }
+    );
 
 export const firebaseAuth = getAuth(app);
