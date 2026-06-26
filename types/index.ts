@@ -23,6 +23,13 @@ export interface Receipt {
   uid: string;
 }
 
+export interface AppNotification {
+  id: string;
+  message: string;
+  time: number;
+  read: boolean;
+}
+
 export interface UserProfile {
   email: string | null;
   displayName: string | null;

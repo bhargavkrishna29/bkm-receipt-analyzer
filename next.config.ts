@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_DATABASE_ID: process.env.FIREBASE_DATABASE_ID,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
+  },
   webpack(config) {
     // Force Browserslist to resolve from the project root only,
     // preventing it from walking up to the OneDrive parent package.json.

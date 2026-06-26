@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - Lekha Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-surface": "#213145",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary-fixed-dim": "#b6c4ff",
+                      "surface-bright": "#f8f9ff",
+                      "surface-tint": "#4059aa",
+                      "tertiary-fixed": "#ffddb8",
+                      "on-secondary-container": "#00714d",
+                      "secondary": "#006c49",
+                      "outline": "#757682",
+                      "on-secondary-fixed": "#002113",
+                      "primary-fixed": "#dce1ff",
+                      "on-background": "#0b1c30",
+                      "tertiary": "#3e2400",
+                      "surface": "#f8f9ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-dim": "#cbdbf5",
+                      "primary-container": "#1e3a8a",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#eff4ff",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#d3e4fe",
+                      "surface-container-highest": "#d3e4fe",
+                      "primary": "#00236f",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#b6c4ff",
+                      "on-primary-fixed": "#00164e",
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "surface-container-high": "#dce9ff",
+                      "on-primary-fixed-variant": "#264191",
+                      "outline-variant": "#c5c5d3",
+                      "on-tertiary-container": "#ef9900",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "on-tertiary-fixed": "#2a1700",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#4edea3",
+                      "secondary-container": "#6cf8bb",
+                      "tertiary-container": "#5c3800",
+                      "background": "#f8f9ff",
+                      "on-surface": "#0b1c30",
+                      "on-error-container": "#93000a",
+                      "surface-container": "#e5eeff",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#444651",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-primary-container": "#90a8ff",
+                      "on-secondary-fixed-variant": "#005236"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "xl": "32px",
+                      "base": "4px",
+                      "margin-desktop": "40px",
+                      "margin-mobile": "16px",
+                      "lg": "24px",
+                      "gutter": "20px",
+                      "md": "16px",
+                      "sm": "12px",
+                      "xs": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "numeric-data": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "numeric-data": [
+                              "20px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-inverse-surface hidden md:flex flex-col h-full py-lg px-md z-50">
+<div class="mb-xl">
+<img alt="Lekha Tracker Logo" class="h-16 w-auto mb-sm object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMEmwQJVDQVfGITFEyI3uBNhPN6Co2ugnqCHDMEVDKNpUjEMbY4fhZkYgBJ1D9CToTDuLvP7QfTS_Y6Y4Ft-9xHtiGpbGJSx1w0_-sFmk7hMlWtGUbDC2JDj2Sq2sGpe9jn5GvzlWLjsUDToyFQ8bAiAHZbP4xjeYmifwjs3SMsVUGsgdUEAWFrgGpiE5F9Wzq8IsYoNhQTQQn9gKxhw9CocwIFY5oShPgkOwFC7eOXoiFj1EDcSft4SDkg0oeXDA5e5GWYRGN9GhT"/>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Lekha Tracker</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Financial Intelligence</p>
+</div>
+<ul class="flex flex-col gap-xs flex-grow">
+<!-- Dashboard (Active) -->
+<li>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary bg-surface-variant dark:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<!-- Receipts -->
+<li>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md text-body-md">Receipts</span>
+</a>
+</li>
+<!-- Budget -->
+<li>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-md text-body-md">Budget</span>
+</a>
+</li>
+<!-- Reports -->
+<li>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+</li>
+<!-- Settings -->
+<li>
+<a class="flex items-center gap-sm px-md py-sm rounded-lg text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto">
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-sm px-md rounded-full hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                Upload Receipt
+            </button>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col min-h-screen md:ml-64 w-full">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-40 bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-margin-desktop py-xs shadow-none">
+<div class="flex items-center md:hidden">
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Lekha Tracker</h1>
+</div>
+<!-- Search -->
+<div class="hidden md:flex flex-1 max-w-md relative mr-lg">
+<span class="material-symbols-outlined absolute left-sm top-1/2 transform -translate-y-1/2 text-outline-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-full py-xs pl-xl pr-md font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" placeholder="Search transactions..." type="text"/>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-sm">
+<button class="p-xs rounded-full text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-secondary-fixed transition-colors scale-95 active:scale-100 transition-transform relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-xs rounded-full text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-secondary-fixed transition-colors scale-95 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<img alt="John Doe Profile" class="w-8 h-8 rounded-full border border-outline-variant ml-xs object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6eUjmGBrLlJBqIV0Amd5sUZdp9lWnitC0Qq7zdxdj-hY3u0zKIqAbnVJftabw58sRnS3o2s9xkZSDsFobluxmuqlUcrSXstxA_l7-fWkRPmwyURkXSBoti7hBQPpFrGkNlCthyX_tkDInuDSL_MEM_S7HWQK0QaS6REN8BG5fgsq9sJ8IfsGJKEEJMVE3dvs4ps4AYh7YQL9q8V-eq3CWnZb65iG_yfTryHndXAJZXoTpkQJ2HNYRJUX6H1WYriebH1zxdQVM_S0r"/>
+</div>
+</header>
+<!-- Main Dashboard Content -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto">
+<!-- Overview Header -->
+<div class="mb-lg flex justify-between items-end flex-wrap gap-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg font-bold text-on-surface">Dashboard</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-base">Welcome back, John. Here's your financial overview.</p>
+</div>
+<div class="flex gap-sm">
+<select class="bg-surface-container-lowest border border-outline-variant rounded-md py-xs px-md font-body-sm text-body-sm text-on-surface focus:border-primary outline-none">
+<option>Last 3 Months</option>
+<option>This Month</option>
+<option>Year to Date</option>
+</select>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Big Metric: Total Spent -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_4px_rgba(0,0,0,0.05)] p-lg flex flex-col justify-between">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-sm">Total Spent (Last 3 Months)</h3>
+<div class="flex items-end gap-xs">
+<span class="font-display-lg text-display-lg font-bold text-on-surface">$14,250.00</span>
+</div>
+</div>
+<div class="mt-md flex items-center gap-xs">
+<div class="flex items-center text-error bg-error-container px-2 py-1 rounded-full">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="font-label-md text-label-md ml-1">+5.2%</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vs previous period</span>
+</div>
+<div class="mt-lg">
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant mb-xs">
+<span>Budget utilization</span>
+<span>85%</span>
+</div>
+<div class="w-full bg-surface-variant rounded-full h-1">
+<div class="bg-primary h-1 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<!-- Chart: Spending Trends -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_4px_rgba(0,0,0,0.05)] p-lg flex flex-col">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Spending by Category</h3>
+<button class="text-primary hover:text-primary-container font-label-md text-label-md flex items-center gap-xs">
+                            View Report <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Placeholder for Chart -->
+<div class="flex-1 min-h-[200px] flex items-end gap-sm pt-xl border-b border-l border-outline-variant pb-xs pl-xs relative">
+<!-- Y-axis labels -->
+<div class="absolute left-[-30px] top-0 bottom-0 flex flex-col justify-between font-label-md text-[10px] text-on-surface-variant py-xs">
+<span>$5k</span>
+<span>$2.5k</span>
+<span>$0</span>
+</div>
+<!-- Bars -->
+<div class="flex-1 flex flex-col items-center justify-end group">
+<div class="w-full max-w-[40px] bg-secondary-container hover:bg-secondary transition-colors rounded-t-sm h-[80%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-surface px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">$4,000</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant mt-sm">Software</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-end group">
+<div class="w-full max-w-[40px] bg-primary-container hover:bg-primary transition-colors rounded-t-sm h-[60%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-surface px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">$3,000</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant mt-sm">Travel</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-end group">
+<div class="w-full max-w-[40px] bg-surface-tint hover:bg-primary transition-colors rounded-t-sm h-[40%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-surface px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">$2,000</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant mt-sm">Meals</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-end group">
+<div class="w-full max-w-[40px] bg-tertiary-container hover:bg-tertiary transition-colors rounded-t-sm h-[70%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-surface px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">$3,500</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant mt-sm">Office</span>
+</div>
+<div class="flex-1 flex flex-col items-center justify-end group">
+<div class="w-full max-w-[40px] bg-outline-variant hover:bg-outline transition-colors rounded-t-sm h-[35%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-surface px-2 py-1 rounded text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">$1,750</div>
+</div>
+<span class="font-label-md text-[10px] text-on-surface-variant mt-sm">Other</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity List -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_4px_rgba(0,0,0,0.05)] flex flex-col">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Recent Uploads</h3>
+<button class="text-primary hover:underline font-label-md text-label-md">View All</button>
+</div>
+<div class="flex flex-col">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-sm border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">flight</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Delta Airlines</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">TXN-9982 • Oct 24, 2023</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-on-surface block">$450.00</span>
+<span class="font-label-md text-label-md text-secondary bg-secondary-container px-2 py-0.5 rounded-sm">Approved</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-sm border-b border-outline-variant hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Steakhouse 55</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">TXN-9981 • Oct 23, 2023</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-on-surface block">$124.50</span>
+<span class="font-label-md text-label-md text-tertiary-container bg-tertiary-fixed px-2 py-0.5 rounded-sm">Pending</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-sm hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">devices</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Apple Store</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">TXN-9980 • Oct 21, 2023</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-on-surface block">$1,299.00</span>
+<span class="font-label-md text-label-md text-secondary bg-secondary-container px-2 py-0.5 rounded-sm">Approved</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Upload Widget -->
+<div class="md:col-span-4 bg-primary text-on-primary rounded-xl p-lg flex flex-col justify-center items-center text-center relative overflow-hidden shadow-[0_12px_24px_rgba(0,35,111,0.15)]">
+<!-- Decorative background element -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-container rounded-full opacity-50 blur-xl"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-secondary-container rounded-full opacity-20 blur-xl"></div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-16 h-16 bg-on-primary text-primary rounded-full flex items-center justify-center mb-md shadow-sm">
+<span class="material-symbols-outlined text-[32px]">document_scanner</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-semibold mb-xs">Quick Upload</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mb-lg">Drag &amp; drop a receipt or snap a photo to auto-extract data instantly.</p>
+<div class="w-full border-2 border-dashed border-primary-fixed-dim rounded-lg p-md hover:bg-primary-container transition-colors cursor-pointer">
+<span class="font-label-md text-label-md">Browse Files</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

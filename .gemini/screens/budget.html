@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Budget Management - Lekha Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#213145",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary-fixed-dim": "#b6c4ff",
+                        "surface-bright": "#f8f9ff",
+                        "surface-tint": "#4059aa",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-container": "#00714d",
+                        "secondary": "#006c49",
+                        "outline": "#757682",
+                        "on-secondary-fixed": "#002113",
+                        "primary-fixed": "#dce1ff",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#3e2400",
+                        "surface": "#f8f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#1e3a8a",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#eff4ff",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary": "#00236f",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#b6c4ff",
+                        "on-primary-fixed": "#00164e",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-container-high": "#dce9ff",
+                        "on-primary-fixed-variant": "#264191",
+                        "outline-variant": "#c5c5d3",
+                        "on-tertiary-container": "#ef9900",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-tertiary-fixed": "#2a1700",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "secondary-container": "#6cf8bb",
+                        "tertiary-container": "#5c3800",
+                        "background": "#f8f9ff",
+                        "on-surface": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#e5eeff",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#444651",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-container": "#90a8ff",
+                        "on-secondary-fixed-variant": "#005236"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "base": "4px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "lg": "24px",
+                        "gutter": "20px",
+                        "md": "16px",
+                        "sm": "12px",
+                        "xs": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "numeric-data": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "numeric-data": ["20px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #F8FAFC; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #00236f;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="text-on-background font-body-md antialiased min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-low dark:bg-inverse-surface h-screen w-64 fixed left-0 top-0 flex flex-col h-full py-lg px-md z-50 hidden md:flex">
+<div class="mb-xl flex items-center gap-sm">
+<img alt="Lekha Tracker Logo" class="h-10 w-10 object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMEmwQJVDQVfGITFEyI3uBNhPN6Co2ugnqCHDMEVDKNpUjEMbY4fhZkYgBJ1D9CToTDuLvP7QfTS_Y6Y4Ft-9xHtiGpbGJSx1w0_-sFmk7hMlWtGUbDC2JDj2Sq2sGpe9jn5GvzlWLjsUDToyFQ8bAiAHZbP4xjeYmifwjs3SMsVUGsgdUEAWFrgGpiE5F9Wzq8IsYoNhQTQQn9gKxhw9CocwIFY5oShPgkOwFC7eOXoiFj1EDcSft4SDkg0oeXDA5e5GWYRGN9GhT"/>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Lekha Tracker</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Financial Intelligence</p>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<a class="flex items-center gap-md px-sm py-xs rounded-DEFAULT text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded-DEFAULT text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-body-md text-body-md">Receipts</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded-DEFAULT text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary bg-surface-variant transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-body-md text-body-md">Budget</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded-DEFAULT text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-body-md text-body-md">Reports</span>
+</a>
+<a class="flex items-center gap-md px-sm py-xs rounded-DEFAULT text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+<button class="mt-auto bg-primary text-on-primary w-full py-sm rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+            Upload Receipt
+        </button>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background docked full-width top-0 sticky z-40 border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-margin-desktop py-xs h-[64px]">
+<div class="flex items-center md:hidden">
+<span class="material-symbols-outlined text-primary text-2xl mr-sm">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Lekha Tracker</h1>
+</div>
+<div class="hidden md:flex items-center bg-surface-container-low rounded-full px-md py-xs w-96 border border-outline-variant focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant mr-xs">search</span>
+<input class="bg-transparent border-none outline-none w-full font-body-sm text-body-sm text-on-surface focus:ring-0 p-0" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:text-primary transition-colors scale-95 active:scale-100 transition-transform relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors scale-95 active:scale-100 transition-transform hidden sm:block">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<img alt="John Doe Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant ml-sm" data-alt="A professional headshot of a business user, cleanly lit, wearing a smart casual blue shirt, set against a bright, minimalist modern office background. The lighting is soft and neutral, enhancing a crisp, corporate aesthetic suitable for a high-end financial application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLF7kB8LjkpMEzcU9sdiMk3xpqiqRLZjTTAyw0RfvAcxocVwV-uccyrmG4oVGt-VIi_69yYt_4QopZo-gRgiZjvuwQ3vCEKroeh8g_ivIzqehCTfmDkl80KjbhwAzAfxBlf6PRypTQoChaKAEE4gal3u1e2jSKnGgqz2CbZWDzvQIlBjp7yvHm_D1zWRrrK2Jlq2-a-Z_3pozotAiPhmlwGHrFMN8txX8pYX03Wt2ho-t2dtl6yGk6O11H6RQCCpJKXJGMqn0EvB9y"/>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-[1280px] w-full mx-auto pb-32 md:pb-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-lg gap-md">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Budget Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Track, adjust, and optimize your monthly spending.</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-low p-xs rounded-lg border border-outline-variant">
+<span class="font-label-md text-label-md text-on-surface-variant px-sm">October 2023</span>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">chevron_left</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary">chevron_right</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Left Column: Overview & Categories -->
+<div class="lg:col-span-8 flex flex-col gap-lg">
+<!-- Global Budget Summary Card -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-xl p-lg shadow-[0_4px_4px_rgba(0,0,0,0.05)] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed-dim opacity-20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-md relative z-10">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Monthly Budget</h3>
+<div class="flex items-baseline gap-sm mt-xs">
+<span class="font-display-lg text-display-lg text-on-background">$4,250.00</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ $5,000.00</span>
+</div>
+</div>
+<div class="mt-sm sm:mt-0 bg-surface-variant text-primary px-sm py-xs rounded-DEFAULT font-label-md text-label-md flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                                15% Under Budget
+                            </div>
+</div>
+<div class="relative w-full h-4 bg-[#F1F5F9] rounded-full overflow-hidden mb-xs z-10">
+<div class="absolute top-0 left-0 h-full bg-secondary rounded-full" style="width: 85%;"></div>
+</div>
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant relative z-10">
+<span>$750 Remaining</span>
+<span>25 Days Left</span>
+</div>
+</div>
+<!-- Category Sliders & Tracking -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-xl p-lg shadow-[0_4px_4px_rgba(0,0,0,0.05)]">
+<div class="flex justify-between items-center mb-md">
+<h3 class="font-headline-md text-headline-md text-on-background">Category Limits</h3>
+<button class="font-label-md text-label-md text-primary hover:underline">Edit All</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Adjust sliders to dynamically reallocate your remaining funds.</p>
+<div class="space-y-xl">
+<!-- Housing -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">home</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-background">Housing</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Rent, Utilities, Maintenance</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-on-background">$2,100</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">/ $2,200</span>
+</div>
+</div>
+<div class="relative w-full h-4 bg-[#F1F5F9] rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-secondary rounded-full" style="width: 95%;"></div>
+</div>
+<input class="mt-xs" max="3000" min="1500" type="range" value="2200"/>
+</div>
+<hr class="border-[#F1F5F9]"/>
+<!-- Food -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-background">Food &amp; Dining</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Groceries, Restaurants</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-on-background">$650</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">/ $800</span>
+</div>
+</div>
+<div class="relative w-full h-4 bg-[#F1F5F9] rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-secondary rounded-full" style="width: 81%;"></div>
+</div>
+<input class="mt-xs" max="1200" min="400" type="range" value="800"/>
+</div>
+<hr class="border-[#F1F5F9]"/>
+<!-- Entertainment -->
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-background">Entertainment</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Subscriptions, Events</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-numeric-data text-numeric-data text-error">$450</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">/ $400</span>
+</div>
+</div>
+<div class="relative w-full h-4 bg-[#F1F5F9] rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-error rounded-full" style="width: 100%;"></div>
+</div>
+<input class="mt-xs" max="800" min="200" type="range" value="400"/>
+<p class="font-label-md text-label-md text-error flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> Limit Exceeded by $50
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: AI Insights & Planned vs Actual -->
+<div class="lg:col-span-4 flex flex-col gap-lg">
+<!-- AI Recommendations (Glassmorphism) -->
+<div class="glass-panel rounded-xl p-md shadow-[0_12px_24px_rgba(0,0,0,0.05)] relative overflow-hidden bg-gradient-to-br from-surface-bright to-surface-container-low">
+<div class="absolute top-0 right-0 p-sm">
+<span class="material-symbols-outlined text-secondary-fixed-dim" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-wider mb-sm">AI Insights</h3>
+<div class="space-y-md">
+<div class="bg-surface-container-lowest p-sm rounded-lg border border-outline-variant/50">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary mt-1">lightbulb</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-background mb-1">Where to Save</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Based on your 3-month history, you are consistently spending 20% under your Grocery limit. Consider reallocating $150 to Savings or Debt Repayment.</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-sm rounded-lg border border-outline-variant/50">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-tertiary-container mt-1">shopping_cart_checkout</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-background mb-1">How to Spend</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">Your Entertainment category often overshoots in the final week. Try setting aside a fixed $50 'weekend buffer' early in the month.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Planned vs Actual -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-xl p-md shadow-[0_4px_4px_rgba(0,0,0,0.05)]">
+<h3 class="font-headline-md text-headline-md text-on-background mb-md">Planned vs. Actual</h3>
+<div class="space-y-sm">
+<div class="flex justify-between items-center text-sm">
+<span class="font-body-sm text-on-surface-variant">Week 1</span>
+<div class="w-1/2 flex gap-1 h-3 rounded-sm overflow-hidden">
+<div class="bg-outline-variant w-full" title="Planned: $1250"></div>
+<div class="bg-secondary w-4/5" title="Actual: $1000"></div>
+</div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="font-body-sm text-on-surface-variant">Week 2</span>
+<div class="w-1/2 flex gap-1 h-3 rounded-sm overflow-hidden">
+<div class="bg-outline-variant w-full" title="Planned: $1250"></div>
+<div class="bg-secondary w-full" title="Actual: $1200"></div>
+</div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="font-body-sm text-on-surface-variant">Week 3</span>
+<div class="w-1/2 flex gap-1 h-3 rounded-sm overflow-hidden">
+<div class="bg-outline-variant w-full" title="Planned: $1250"></div>
+<div class="bg-error w-[110%]" title="Actual: $1400"></div>
+</div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="font-body-sm text-on-surface-variant">Week 4 (Current)</span>
+<div class="w-1/2 flex gap-1 h-3 rounded-sm overflow-hidden">
+<div class="bg-outline-variant w-full" title="Planned: $1250"></div>
+<div class="bg-secondary w-1/2" title="Actual: $650"></div>
+</div>
+</div>
+</div>
+<div class="mt-md pt-sm border-t border-[#F1F5F9] flex justify-between font-label-md text-label-md">
+<span class="text-on-surface-variant flex items-center gap-xs"><div class="w-2 h-2 bg-outline-variant rounded-full"></div> Planned</span>
+<span class="text-on-surface-variant flex items-center gap-xs"><div class="w-2 h-2 bg-secondary rounded-full"></div> Actual</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
