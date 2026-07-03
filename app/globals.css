@@ -8,8 +8,66 @@
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
+/* ============================================================
+   SEMANTIC COLOR TOKENS — RGB triplets (no rgb() wrapper)
+   Used as: rgb(var(--c-name) / <alpha-value>)
+   ============================================================ */
+
+/* ── Light mode (default) ─────────────────────────────────── */
+:root {
+  --c-background:                  248 249 255;
+  --c-surface:                     248 249 255;
+  --c-surface-bright:              248 249 255;
+  --c-surface-dim:                 203 219 245;
+  --c-surface-container-lowest:    255 255 255;
+  --c-surface-container-low:       239 244 255;
+  --c-surface-container:           229 238 255;
+  --c-surface-container-high:      220 233 255;
+  --c-surface-container-highest:   211 228 254;
+  --c-surface-variant:             211 228 254;
+  --c-on-surface:                  11 28 48;
+  --c-on-background:               11 28 48;
+  --c-on-surface-variant:          68 70 81;
+  --c-outline:                     117 118 130;
+  --c-outline-variant:             197 197 211;
+  --c-primary:                     0 35 111;
+  --c-on-primary:                  255 255 255;
+  --c-primary-container:           30 58 138;
+  --c-on-primary-container:        144 168 255;
+  --c-inverse-surface:             33 49 69;
+  --c-inverse-on-surface:          234 241 255;
+  --c-surface-tint:                64 89 170;
+}
+
+/* ── Dark mode ─────────────────────────────────────────────── */
+html.dark {
+  --c-background:                  10 15 26;
+  --c-surface:                     13 20 35;
+  --c-surface-bright:              26 38 60;
+  --c-surface-dim:                 8 12 22;
+  --c-surface-container-lowest:    20 30 52;
+  --c-surface-container-low:       24 36 60;
+  --c-surface-container:           30 45 72;
+  --c-surface-container-high:      36 53 84;
+  --c-surface-container-highest:   44 62 96;
+  --c-surface-variant:             36 53 84;
+  --c-on-surface:                  220 233 255;
+  --c-on-background:               220 233 255;
+  --c-on-surface-variant:          143 166 200;
+  --c-outline:                     77 98 128;
+  --c-outline-variant:             36 53 84;
+  --c-primary:                     129 156 255;
+  --c-on-primary:                  0 24 109;
+  --c-primary-container:           20 45 100;
+  --c-on-primary-container:        182 196 255;
+  --c-inverse-surface:             220 233 255;
+  --c-inverse-on-surface:          24 36 60;
+  --c-surface-tint:                129 156 255;
+}
+
 @layer base {
   body {
     @apply bg-background text-on-background font-body-md;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 }

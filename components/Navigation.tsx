@@ -6,13 +6,32 @@ import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useData } from './DataProvider';
 import { signOut, useSession } from 'next-auth/react';
+import { useTheme } from './ThemeProvider';
+import { ExchangeRateBanner } from './ExchangeRateBanner';
 
 export function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const { notifications, markNotificationsRead } = useData();
+  const { theme, toggleTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check admin role via server-side API (reliable — no NEXT_PUBLIC_ dependency)
+  useEffect(() => {
+    async function checkRole() {
+      if (!session?.user?.id) return;
+      try {
+        const res = await fetch('/api/admin/check');
+        const data = await res.json();
+        setIsAdmin(data.isAdmin === true);
+      } catch {
+        // silently ignore — non-admin is the safe default
+      }
+    }
+    checkRole();
+  }, [session?.user?.id]);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -38,25 +57,27 @@ export function Navigation({ children }: { children: React.ReactNode }) {
     { name: 'Budget', href: '/budget', icon: 'account_balance_wallet' },
     { name: 'Reports', href: '/reports', icon: 'bar_chart' },
     { name: 'Settings', href: '/settings', icon: 'settings' },
+    ...(isAdmin ? [{ name: 'Admin Panel', href: '/admin', icon: 'admin_panel_settings' }] : []),
   ];
 
   return (
     <div className="bg-surface text-on-surface font-body-md min-h-screen flex">
       {/* SideNavBar */}
-      <nav className="h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-inverse-surface hidden md:flex flex-col py-lg px-md z-50">
-        <div className="mb-xl">
-          <Image
-            alt="Lekha Tracker Logo"
-            className="h-16 w-auto mb-sm object-contain"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMEmwQJVDQVfGITFEyI3uBNhPN6Co2ugnqCHDMEVDKNpUjEMbY4fhZkYgBJ1D9CToTDuLvP7QfTS_Y6Y4Ft-9xHtiGpbGJSx1w0_-sFmk7hMlWtGUbDC2JDj2Sq2sGpe9jn5GvzlWLjsUDToyFQ8bAiAHZbP4xjeYmifwjs3SMsVUGsgdUEAWFrgGpiE5F9Wzq8IsYoNhQTQQn9gKxhw9CocwIFY5oShPgkOwFC7eOXoiFj1EDcSft4SDkg0oeXDA5e5GWYRGN9GhT"
-            width={64}
-            height={64}
-          />
-          <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
-            Lekha Tracker
-          </h1>
-          <p className="font-body-sm text-body-sm text-on-surface-variant">Financial Intelligence</p>
-        </div>
+      <nav className="h-screen w-64 fixed left-0 top-0 bg-surface-container-low hidden md:flex flex-col py-lg px-md z-50 border-r border-outline-variant">
+        <Link href="/" className="mb-xl block cursor-pointer group">
+          <div className="flex items-center gap-3 mb-sm">
+            <div className="w-12 h-12 bg-white rounded-md flex items-center justify-center flex-shrink-0 shadow-sm group-hover:shadow transition-shadow">
+              <Image
+                src="/logo.png"
+                alt="Lekha Tracker Logo" width={36} height={36} className="object-contain" unoptimized
+              />
+            </div>
+            <h1 className="font-headline-md text-2xl font-bold text-primary tracking-tight">
+              Lekha Tracker
+            </h1>
+          </div>
+          <p className="font-body-sm text-body-sm text-on-surface-variant ml-1">Financial Intelligence</p>
+        </Link>
 
         <ul className="flex flex-col gap-xs flex-grow">
           {navItems.map((item) => {
@@ -67,8 +88,8 @@ export function Navigation({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={`flex items-center gap-sm px-md py-sm rounded-lg transition-colors transition-all duration-200 ease-in-out ${
                     isActive
-                      ? 'text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary bg-surface-variant dark:bg-surface-container-highest'
-                      : 'text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest'
+                      ? 'text-primary font-bold border-r-4 border-primary bg-surface-variant'
+                      : 'text-on-surface-variant hover:bg-surface-variant'
                   }`}
                 >
                   <span
@@ -95,27 +116,33 @@ export function Navigation({ children }: { children: React.ReactNode }) {
       {/* Main Content Wrapper */}
       <div className="flex-1 flex flex-col min-h-screen md:ml-64 w-full">
         {/* TopAppBar */}
-        <header className="docked full-width top-0 sticky z-40 bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-margin-desktop py-xs shadow-none">
+        <header className="docked full-width top-0 sticky z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-xs shadow-none">
           <div className="flex items-center md:hidden">
-            <h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
-              Lekha Tracker
-            </h1>
+            <Link href="/" className="flex items-center gap-2 cursor-pointer">
+              <div className="w-8 h-8 bg-white rounded flex items-center justify-center flex-shrink-0 shadow-sm">
+                <Image src="/logo.png" alt="Lekha Tracker Logo" width={24} height={24} className="object-contain" unoptimized />
+              </div>
+              <h1 className="font-headline-md text-xl font-bold text-primary tracking-tight">
+                Lekha Tracker
+              </h1>
+            </Link>
           </div>
           
-          {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-md relative mr-lg">
-            <span className="material-symbols-outlined absolute left-sm top-1/2 transform -translate-y-1/2 text-outline-variant text-[20px]">
-              search
-            </span>
-            <input
-              className="w-full bg-surface-container-lowest border border-outline-variant rounded-full py-xs pl-xl pr-md font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
-              placeholder="Search transactions..."
-              type="text"
-            />
-          </div>
+
           
           {/* Actions */}
-          <div className="flex items-center gap-sm">
+          <div className="flex items-center gap-sm ml-auto">
+            {/* Dark / Light toggle */}
+            <button
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              className="p-xs rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all duration-200"
+            >
+              <span className="material-symbols-outlined text-[22px]">
+                {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+              </span>
+            </button>
+
             <div className="relative" ref={notifRef}>
               <button 
                 className="p-xs rounded-full text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-secondary-fixed transition-colors scale-95 active:scale-100 transition-transform relative"
@@ -176,6 +203,12 @@ export function Navigation({ children }: { children: React.ReactNode }) {
                       <span className="material-symbols-outlined text-[20px]">person</span>
                       Profile Settings
                     </Link>
+                    {isAdmin && (
+                      <Link href="/admin" className="px-md py-sm hover:bg-primary/10 font-body-md flex items-center gap-sm transition-colors text-primary" onClick={() => setShowProfile(false)}>
+                        <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+                        Admin Panel
+                      </Link>
+                    )}
                     <button 
                       onClick={() => signOut({ callbackUrl: '/' })}
                       className="px-md py-sm hover:bg-error-container text-error font-body-md flex items-center gap-sm transition-colors w-full text-left"
@@ -189,6 +222,8 @@ export function Navigation({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </header>
+        
+        <ExchangeRateBanner />
         
         <main className="p-margin-mobile md:p-margin-desktop max-w-[1200px] mx-auto w-full">
           {children}

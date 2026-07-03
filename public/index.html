@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spendwise — Receipt Analyzer</title>
+  <meta name="description" content="Upload receipts, track spending, and get AI-powered insights on your expenses. Sign up free." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- ── Loading Overlay (while auth state resolves) ── -->
+  <div class="auth-loading" id="authLoading">
+    <div class="auth-loading-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">Spendwise</span>
+      </div>
+      <div class="spinner" style="margin-top:24px"></div>
+    </div>
+  </div>
+
+  <!-- ── Auth Screen (shown when logged out) ── -->
+  <div class="auth-screen hidden" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">Spendwise</span>
+        <p class="auth-tagline">Upload receipts. Track spending. Get AI insights.</p>
+      </div>
+
+      <!-- Email verification banner -->
+      <div class="auth-verify-banner hidden" id="authVerifyBanner">
+        <span>📧</span>
+        <div>
+          <strong>Check your email</strong>
+          <p>We sent a verification link to <span id="verifyEmail"></span></p>
+        </div>
+        <button class="btn-text" id="resendVerifyBtn">Resend</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" id="tabSignIn" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tabSignUp" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Google Button -->
+      <button class="btn-google" id="googleSignInBtn">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+          <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <!-- Sign In Form -->
+      <form class="auth-form" id="signInForm" onsubmit="handleSignIn(event)">
+        <div class="input-group">
+          <label class="input-label" for="siEmail">Email</label>
+          <input type="email" id="siEmail" class="input-field" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="siPassword">Password</label>
+          <input type="password" id="siPassword" class="input-field" placeholder="Your password" required autocomplete="current-password" />
+        </div>
+        <div class="auth-error hidden" id="signInError"></div>
+        <button type="submit" class="btn-primary btn-full" id="signInBtn">Sign In</button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form class="auth-form hidden" id="signUpForm" onsubmit="handleSignUp(event)">
+        <div class="input-group">
+          <label class="input-label" for="suEmail">Email</label>
+          <input type="email" id="suEmail" class="input-field" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="suPassword">Password</label>
+          <input type="password" id="suPassword" class="input-field" placeholder="Min 6 characters" required autocomplete="new-password" minlength="6" />
+        </div>
+        <div class="auth-error hidden" id="signUpError"></div>
+        <button type="submit" class="btn-primary btn-full" id="signUpBtn">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Main App (shown when logged in) ── -->
+  <div class="app-shell hidden" id="appShell">
+
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">◈</span>
+          <span class="logo-text">Spendwise</span>
+        </div>
+        <div class="header-actions">
+          <!-- User info -->
+          <div class="user-info" id="userInfo">
+            <div class="user-avatar" id="userAvatar">?</div>
+            <span class="user-name" id="userName"></span>
+          </div>
+          <button class="btn-ghost" id="setBudgetBtn">Set Budget</button>
+          <button class="btn-primary" id="getInsightsBtn" disabled>
+            <span>Full Report</span>
+            <span class="receipt-count" id="receiptCountBadge">0</span>
+          </button>
+          <button class="btn-ghost btn-signout" id="signOutBtn" title="Sign out">↪ Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Email verification notice -->
+    <div class="verify-notice hidden" id="verifyNotice">
+      📧 Please verify your email address to ensure full access.
+      <button class="btn-text" id="resendNoticeBtn">Resend email</button>
+    </div>
+
+    <main class="main">
+
+      <!-- Upload Zone -->
+      <section class="upload-section">
+        <div class="upload-zone" id="uploadZone">
+          <div class="upload-idle" id="uploadIdle">
+            <div class="upload-icon">
+              <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="4" width="24" height="32" rx="2" stroke="currentColor" stroke-width="2" fill="none" />
+                <path d="M32 4l8 8H32V4z" stroke="currentColor" stroke-width="2" fill="none" />
+                <path d="M20 20v10M15 25l5-5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <p class="upload-headline">Drop a receipt here</p>
+            <p class="upload-sub">or <label for="fileInput" class="upload-link">browse files</label></p>
+            <p class="upload-formats">JPG, PNG, WEBP · up to 10MB</p>
+          </div>
+          <div class="upload-processing hidden" id="uploadProcessing">
+            <div class="spinner"></div>
+            <p class="processing-text">Reading your receipt<span class="dots"></span></p>
+          </div>
+          <input type="file" id="fileInput" accept="image/*" class="file-input" />
+        </div>
+      </section>
+
+      <!-- Stats Bar -->
+      <section class="stats-bar hidden" id="statsBar">
+        <div class="stat-card">
+          <span class="stat-label">Total Spent</span>
+          <span class="stat-value" id="totalSpent">0.00</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-label">Receipts</span>
+          <span class="stat-value" id="receiptCount">0</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-label">Items Tracked</span>
+          <span class="stat-value" id="totalItems">0</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-label">Top Category</span>
+          <span class="stat-value" id="topCategory">—</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-label">Budget Left</span>
+          <span class="stat-value" id="budgetLeft">—</span>
+        </div>
+      </section>
+
+      <!-- Charts: two donuts side by side -->
+      <section class="chart-section hidden" id="chartSection">
+        <div class="chart-grid">
+          <div class="chart-card">
+            <h2 class="chart-card-title">By Store Type</h2>
+            <div class="chart-layout">
+              <canvas id="donutChart" width="200" height="200"></canvas>
+              <div class="chart-legend" id="chartLegend"></div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h2 class="chart-card-title">By Item Type</h2>
+            <div class="chart-layout">
+              <canvas id="itemDonutChart" width="200" height="200"></canvas>
+              <div class="chart-legend" id="itemChartLegend"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Items Table -->
+      <section class="items-section hidden" id="itemsSection">
+        <h2 class="section-title">All Items</h2>
+        <div id="itemsTable"></div>
+      </section>
+
+      <!-- Quick Tip -->
+      <div class="quick-tip hidden" id="quickTip">
+        <span class="tip-icon">💡</span>
+        <p class="tip-text" id="tipText"></p>
+      </div>
+
+      <!-- Receipts List -->
+      <section class="receipts-section hidden" id="receiptsSection">
+        <div class="section-header" style="flex-wrap: wrap; gap: 16px;">
+          <h2 class="section-title">Receipts <span class="history-badge">History</span></h2>
+          <div class="filter-bar" style="display:flex; gap: 8px; flex-wrap: wrap;">
+            <select id="filterMonth" class="form-input" style="width:auto; padding: 6px 12px; font-size: 13px;">
+              <option value="3">Last 3 Months</option>
+              <option value="1">Last Month</option>
+            </select>
+            <select id="filterCategory" class="form-input" style="width:auto; padding: 6px 12px; font-size: 13px;">
+              <option value="All">All Categories</option>
+              <option value="Groceries">Groceries</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Transportation">Transportation</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Entertainment">Entertainment</option>
+            </select>
+            <select id="sortReceipts" class="form-input" style="width:auto; padding: 6px 12px; font-size: 13px;">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="high">Highest Amount</option>
+              <option value="low">Lowest Amount</option>
+            </select>
+            <button class="btn-danger-ghost" id="clearAllBtn">Clear all</button>
+          </div>
+        </div>
+        <div class="receipts-list" id="receiptsList"></div>
+      </section>
+
+    </main>
+
+    <!-- Full Report Modal -->
+    <div class="modal-overlay hidden" id="reportModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Monthly Report</h2>
+          <button class="modal-close" id="closeModal">✕</button>
+        </div>
+        <div class="modal-body" id="reportBody">
+          <div class="report-loading">
+            <div class="spinner"></div>
+            <p>Analyzing<span class="dots"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget Modal -->
+    <div class="modal-overlay hidden" id="budgetModal">
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <h2 class="modal-title">Monthly Budget</h2>
+          <button class="modal-close" id="closeBudgetModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Set your monthly spending limit to track how much you have left.</p>
+          <div class="input-group">
+            <label class="input-label">Amount</label>
+            <input type="number" id="budgetInput" class="input-field" placeholder="e.g. 5000" min="0" />
+          </div>
+          <div class="modal-actions">
+            <button class="btn-ghost" id="cancelBudget">Cancel</button>
+            <button class="btn-primary" id="saveBudget">Save Budget</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /app-shell -->
+
+  <!-- Toast -->
+  <div class="toast hidden" id="toast"><span id="toastMsg"></span></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

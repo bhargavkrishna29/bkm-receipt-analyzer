@@ -30,12 +30,34 @@ export interface AppNotification {
   read: boolean;
 }
 
-export interface UserProfile {
+export type UserProfile = {
   email: string | null;
   displayName: string | null;
   budget?: number;
+  currency?: string;
   lastLoginAt?: number;
+};
+
+export type ChatMessage = {
+  role: 'user' | 'model';
+  content: string;
+};
+
+// ── Admin / Role management ────────────────────────────────────────────────
+
+export type UserRole = 'admin' | 'editor' | 'viewer';
+
+export interface AdminUser {
+  uid: string;
+  email: string | null;
+  name: string | null;
+  role: UserRole;
+  createdAt: string | null;   // ISO string from Firebase Auth
+  lastLoginAt: string | null; // ISO string from Firebase Auth
+  disabled: boolean;
+  provider: string;           // 'google.com' | 'password' | etc.
 }
+
 
 // ── Gemini AI response shapes ──────────────────────────────────────────────
 

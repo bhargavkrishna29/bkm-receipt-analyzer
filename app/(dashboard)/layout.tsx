@@ -2,6 +2,7 @@
 
 import { Navigation } from '@/components/Navigation';
 import { DataProvider } from '@/components/DataProvider';
+import { ChatbotWidget } from '@/components/ChatbotWidget';
 
 export default function DashboardLayout({
   children,
@@ -11,6 +12,7 @@ export default function DashboardLayout({
   return (
     <DataProvider>
       <Navigation>{children}</Navigation>
+      <ChatbotWidget />
     </DataProvider>
   );
 }

@@ -76,6 +76,12 @@ export async function saveBudget(budget: number): Promise<void> {
   await adminDb.collection('users').doc(userId).set({ budget }, { merge: true });
 }
 
+// ── Save currency preference to user profile ────────────────────────────────
+export async function saveCurrency(currency: string): Promise<void> {
+  const userId = await requireAuth();
+  await adminDb.collection('users').doc(userId).set({ currency }, { merge: true });
+}
+
 // ── Load user profile (budget etc.) ─────────────────────────────────────────
 export async function loadProfile(): Promise<UserProfile | null> {
   const userId = await requireAuth();

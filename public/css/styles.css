@@ -41,6 +41,48 @@
   --cat-other: #b2bec3;
 }
 
+/* ── Dark mode overrides for auth/legacy CSS ─────────────────── */
+html.dark {
+  --paper: #0a0f1a;
+  --surface: #14203a;
+  --surface-raised: #1e2d45;
+  --ink: #dce9ff;
+  --ink-secondary: #8fa6c8;
+  --ink-muted: #4d6280;
+  --accent: #819cff;
+  --accent-light: #0a1040;
+  --accent-hover: #6b86ff;
+  --positive: #34d399;
+  --positive-light: #052416;
+  --warning: #fbbf24;
+  --warning-light: #1a1000;
+  --danger: #f87171;
+  --danger-light: #1a0808;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.7);
+}
+
+html.dark .auth-divider::before {
+  background: rgba(220, 233, 255, 0.1);
+}
+
+html.dark .btn-google {
+  border-color: rgba(220, 233, 255, 0.15);
+  color: var(--ink);
+  background: var(--surface);
+}
+
+html.dark .btn-google:hover {
+  border-color: var(--accent);
+}
+
+html.dark body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+
 /* ===== RESET ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }

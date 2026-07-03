@@ -17,11 +17,16 @@ async function fileToBase64(file: File): Promise<{ base64: string; mediaType: st
 }
 
 export default function ReceiptsPage() {
-  const { expenses, addReceipt, removeReceipt } = useData();
+  const { expenses, addReceipt, removeReceipt, currencySymbol, convertAmount } = useData();
   const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(expenses[0] || null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Camera State
+  const [showCamera, setShowCamera] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
@@ -91,6 +96,50 @@ export default function ReceiptsPage() {
     if (file) processFile(file);
   }
 
+  const startCamera = async () => {
+    setShowCamera(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' } 
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error("Camera access denied or unavailable", err);
+      showToast("Camera access denied or unavailable. Please check permissions.");
+      setShowCamera(false);
+    }
+  };
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setShowCamera(false);
+  };
+
+  const takeSnapshot = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "camera-receipt.jpg", { type: "image/jpeg" });
+            stopCamera();
+            processFile(file);
+          }
+        }, 'image/jpeg', 0.9);
+      }
+    }
+  };
+
   function onDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.currentTarget.classList.add('bg-surface-container-high');
@@ -106,6 +155,40 @@ export default function ReceiptsPage() {
       {toastMsg && (
         <div className="absolute top-4 right-4 z-50 bg-inverse-surface text-inverse-on-surface px-4 py-2 rounded shadow-lg font-body-sm">
           {toastMsg}
+        </div>
+      )}
+
+      {/* Camera Modal */}
+      {showCamera && (
+        <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
+          <div className="relative w-full max-w-2xl bg-black rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/20">
+            <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline 
+              className="w-full h-[60vh] object-cover bg-black"
+            ></video>
+            <canvas ref={canvasRef} className="hidden"></canvas>
+            
+            <div className="absolute bottom-0 w-full p-6 flex justify-between items-center bg-gradient-to-t from-black/80 to-transparent">
+              <button 
+                onClick={stopCamera}
+                className="px-6 py-2 rounded-full bg-surface-variant text-on-surface-variant font-label-md hover:bg-surface-container-high transition-colors"
+              >
+                Cancel
+              </button>
+              
+              <button 
+                onClick={takeSnapshot}
+                className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-4 border-gray-300 hover:scale-105 transition-transform"
+                title="Take Photo"
+              >
+                <div className="w-12 h-12 rounded-full border-2 border-black"></div>
+              </button>
+              
+              <div className="w-20"></div> {/* Spacer for centering */}
+            </div>
+          </div>
         </div>
       )}
 
@@ -125,13 +208,30 @@ export default function ReceiptsPage() {
               <p className="font-body-sm text-on-surface-variant">Analyzing receipt...</p>
             </div>
           ) : (
-            <>
-              <span className="material-symbols-outlined text-4xl text-primary mb-2">cloud_upload</span>
-              <h3 className="font-label-md text-label-md text-on-surface mb-1">Drag &amp; Drop Receipt</h3>
-              <p className="font-body-sm text-body-sm text-on-surface-variant text-center">
-                or click to browse from device
+            <div className="flex flex-col items-center">
+              <div className="flex gap-4 mb-4">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                  className="w-16 h-16 rounded-2xl bg-primary-container text-on-primary-container flex flex-col items-center justify-center hover:bg-primary hover:text-on-primary transition-colors shadow-sm"
+                  title="Upload File"
+                >
+                  <span className="material-symbols-outlined text-[28px]">cloud_upload</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); startCamera(); }}
+                  className="w-16 h-16 rounded-2xl bg-secondary-container text-on-secondary-container flex flex-col items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors shadow-sm"
+                  title="Take Photo"
+                >
+                  <span className="material-symbols-outlined text-[28px]">photo_camera</span>
+                </button>
+              </div>
+              <h3 className="font-label-md text-label-md text-on-surface mb-1">Upload Receipt</h3>
+              <p className="font-body-sm text-body-sm text-on-surface-variant text-center max-w-[200px]">
+                Drag & drop a file, browse, or take a picture
               </p>
-            </>
+            </div>
           )}
           <input
             type="file"
@@ -173,11 +273,12 @@ export default function ReceiptsPage() {
                       <p className="font-label-md text-[10px] text-on-surface-variant truncate w-32">{receipt.id}</p>
                     </div>
                   </div>
-                  <span className="font-numeric-data text-numeric-data text-on-surface">${receipt.total?.toFixed(2)}</span>
+                  <span className="font-numeric-data text-numeric-data text-on-surface">{currencySymbol}{convertAmount(receipt.total || 0, receipt.currency).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center mt-2 pt-2 border-t border-outline-variant/50 pl-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded bg-secondary-container/30 text-on-secondary-container font-label-md text-[10px]">
-                    <span className="material-symbols-outlined text-[12px] mr-1">check_circle</span> Processed
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:4, padding:'2px 8px', borderRadius:999, background:'rgba(34,197,94,0.10)', border:'1px solid rgba(34,197,94,0.2)', color:'#22c55e', fontSize:10, fontWeight:600, letterSpacing:'0.04em' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize:10 }}>check_circle</span>
+                    Processed
                   </span>
                   <span className="font-body-sm text-[11px] text-on-surface-variant">
                     {new Date(receipt.addedAt).toLocaleDateString()}
@@ -214,7 +315,7 @@ export default function ReceiptsPage() {
               </div>
               <div className="text-right">
                 <p className="font-label-md text-label-md text-on-surface-variant mb-1 uppercase">Total Amount</p>
-                <p className="font-numeric-data text-display-lg text-primary leading-none">${selectedReceipt.total?.toFixed(2)}</p>
+                <p className="font-numeric-data text-display-lg text-primary leading-none">{currencySymbol}{convertAmount(selectedReceipt.total || 0, selectedReceipt.currency).toFixed(2)}</p>
               </div>
             </div>
 
@@ -269,7 +370,7 @@ export default function ReceiptsPage() {
                     <div key={idx} className="grid grid-cols-12 gap-2 p-sm border-b border-outline-variant/30 items-center hover:bg-surface/50 transition-colors">
                       <div className="col-span-6 md:col-span-8 font-body-sm text-on-surface">{item.name}</div>
                       <div className="col-span-3 md:col-span-2 text-right font-numeric-data text-body-sm text-on-surface-variant">{item.quantity}</div>
-                      <div className="col-span-3 md:col-span-2 text-right font-numeric-data text-body-sm font-medium text-on-surface">${item.amount?.toFixed(2)}</div>
+                      <div className="col-span-3 md:col-span-2 text-right font-numeric-data text-body-sm font-medium text-on-surface">{currencySymbol}{convertAmount(item.amount || 0, selectedReceipt.currency).toFixed(2)}</div>
                     </div>
                   )) : (
                     <div className="p-sm text-center text-body-sm text-on-surface-variant">No line items extracted.</div>
@@ -280,11 +381,11 @@ export default function ReceiptsPage() {
                 <div className="bg-surface-container-low p-sm font-numeric-data">
                   <div className="flex justify-end gap-md mb-2 text-body-sm text-on-surface-variant border-b border-outline-variant pb-2">
                     <span>Tax:</span>
-                    <span className="w-20 text-right">${selectedReceipt.taxAmount?.toFixed(2) || '0.00'}</span>
+                    <span className="w-20 text-right">{currencySymbol}{convertAmount(selectedReceipt.taxAmount || 0, selectedReceipt.currency).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-end gap-md text-numeric-data text-on-surface font-semibold pt-1">
                     <span>Total:</span>
-                    <span className="w-20 text-right">${selectedReceipt.total?.toFixed(2)}</span>
+                    <span className="w-20 text-right">{currencySymbol}{convertAmount(selectedReceipt.total || 0, selectedReceipt.currency).toFixed(2)}</span>
                   </div>
                 </div>
               </div>

@@ -1,203 +1,355 @@
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
-export default function HomePage() {
+export default function LandingPage() {
   return (
-    <>
-      
-{/* Top Navigation (Landing Page Version) */}
-<header className="sticky top-0 z-50 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant transition-all duration-300">
-<div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop h-20 flex items-center justify-between">
-<div className="flex items-center gap-2">
-<img alt="Lekha Tracker Logo" className="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMEmwQJVDQVfGITFEyI3uBNhPN6Co2ugnqCHDMEVDKNpUjEMbY4fhZkYgBJ1D9CToTDuLvP7QfTS_Y6Y4Ft-9xHtiGpbGJSx1w0_-sFmk7hMlWtGUbDC2JDj2Sq2sGpe9jn5GvzlWLjsUDToyFQ8bAiAHZbP4xjeYmifwjs3SMsVUGsgdUEAWFrgGpiE5F9Wzq8IsYoNhQTQQn9gKxhw9CocwIFY5oShPgkOwFC7eOXoiFj1EDcSft4SDkg0oeXDA5e5GWYRGN9GhT"/>
-</div>
-<nav className="hidden md:flex items-center gap-lg">
-<a className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#features">Features</a>
-<a className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#how-it-works">How it Works</a>
-<a className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#testimonials">Success Stories</a>
-</nav>
-<div className="flex items-center gap-md">
-<a className="hidden md:block font-label-md text-label-md text-primary hover:bg-surface-container py-2 px-4 rounded transition-colors" href="/login">Login</a>
-<a className="bg-primary text-on-primary font-label-md text-label-md py-2 px-6 rounded-lg hover:bg-primary-container transition-all shadow-sm hover:shadow flex items-center gap-2" href="/signup">
-                    Get Started
-                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
-</div>
-</div>
-</header>
-<main className="flex-grow flex flex-col items-center w-full">
-{/* Hero Section */}
-<section className="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 lg:py-32 flex flex-col lg:flex-row items-center gap-12 lg:gap-24 relative overflow-hidden">
-{/* Abstract background shape */}
-<div className="absolute -z-10 top-0 right-0 w-[800px] h-[800px] bg-surface-variant rounded-full mix-blend-multiply filter blur-3xl opacity-50 translate-x-1/3 -translate-y-1/4"></div>
-<div className="flex-1 flex flex-col items-start z-10">
-<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant mb-6">
-<span className="w-2 h-2 rounded-full bg-secondary-fixed-dim animate-pulse"></span>
-<span className="font-label-md text-label-md text-on-surface-variant">New: AI Receipt Parsing</span>
-</div>
-<h1 className="font-display-lg text-display-lg text-on-background mb-6 leading-tight">
-                    Financial Intelligence, <br/>
-<span className="text-gradient">Automated.</span>
-</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
+    <div className="dark bg-[#050507] text-slate-200 min-h-screen overflow-x-hidden selection:bg-brand-500 selection:text-white" style={{ scrollBehavior: 'smooth' }}>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .glass {
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+        }
+        .glass-panel {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.5) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-gradient-mesh {
+            background-image: 
+                radial-gradient(at 40% 20%, rgba(45, 212, 191, 0.15) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(45, 212, 191, 0.1) 0px, transparent 50%);
+        }
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            border-color: rgba(45, 212, 191, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(45, 212, 191, 0.15);
+        }
+        .btn-glow {
+            position: relative;
+        }
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #2dd4bf, #3b82f6, #2dd4bf);
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+        }
+        .btn-glow:hover::before {
+            opacity: 0.8;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050507;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+      `}} />
+
+      {/* Background Animated Blobs */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none z-[0] overflow-hidden bg-gradient-mesh">
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-brand-500/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+          <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-blue-500/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-[-20%] left-[20%] w-[500px] h-[500px] bg-purple-500/10 rounded-full mix-blend-screen filter blur-[120px] animate-blob" style={{ animationDelay: '4s' }}></div>
+      </div>
+
+      <div className="relative z-10">
+        {/* Navigation */}
+        <header className="fixed top-0 w-full z-50 glass border-b-0 border-white/5 transition-all duration-300">
+            <div className="max-w-[1280px] mx-auto px-6 h-20 flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-3 cursor-pointer group">
+                    <div className="w-11 h-11 bg-white rounded-md flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl transition-all duration-300">
+                        <Image src="/logo.png" alt="Lekha Tracker Logo" width={34} height={34} className="object-contain" unoptimized />
+                    </div>
+                    <span className="font-display font-bold text-2xl tracking-wide text-white group-hover:text-brand-300 transition-colors">Lekha Tracker</span>
+                </Link>
+                
+                <nav className="hidden md:flex items-center gap-8">
+                    <a href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
+                        Features
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#how-it-works" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
+                        How it Works
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#testimonials" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
+                        Success Stories
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </nav>
+
+                <div className="flex items-center gap-4">
+                    <Link href="/login" className="hidden md:block text-sm font-medium text-slate-300 hover:text-white transition-colors">Sign in</Link>
+                    <Link href="/signup" className="btn-glow px-5 py-2.5 rounded-full bg-white text-dark-900 font-semibold text-sm hover:scale-105 transition-transform flex items-center gap-2">
+                        Get Started
+                        <span className="material-symbols-rounded text-[18px]">arrow_forward</span>
+                    </Link>
+                </div>
+            </div>
+        </header>
+
+        {/* Hero Section */}
+        <main className="pt-32 pb-16 md:pt-40 md:pb-24 px-6 max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-16 relative">
+            <div className="flex-1 z-10 flex flex-col items-start">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-brand-500/30 mb-8">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
+                    </span>
+                    <span className="text-xs font-medium text-brand-100 uppercase tracking-wider">AI Receipt Parsing is live</span>
+                </div>
+                
+                <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.1] mb-6 text-white">
+                    Financial Intelligence,<br/>
+                    <span className="text-gradient">Automated.</span>
+                </h1>
+                
+                <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-[576px] leading-relaxed font-sans">
                     Transform chaotic receipts into actionable insights. Lekha Tracker automatically extracts data, categorizes spending, and provides a clear picture of your financial health.
                 </p>
-<div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-<a className="bg-primary text-on-primary font-label-md text-label-md py-4 px-8 rounded-lg hover:bg-primary-container transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-center" href="/signup">
+                
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <Link href="/signup" className="btn-glow px-8 py-4 rounded-full bg-gradient-to-r from-brand-500 to-blue-600 text-white font-semibold shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all flex items-center justify-center gap-2">
                         Start Free Trial
-                    </a>
-<a className="bg-surface-container-lowest text-primary border border-outline-variant font-label-md text-label-md py-4 px-8 rounded-lg hover:bg-surface-container transition-all flex items-center justify-center gap-2 text-center" href="#demo">
-<span className="material-symbols-outlined text-lg">play_circle</span>
+                    </Link>
+                    <a href="#demo" className="px-8 py-4 rounded-full glass text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2 border border-white/10">
+                        <span className="material-symbols-rounded">play_circle</span>
                         Watch Demo
                     </a>
-</div>
-<div className="mt-12 flex items-center gap-4 text-on-surface-variant font-body-sm text-body-sm">
-<div className="flex -space-x-2">
-<img className="w-8 h-8 rounded-full border-2 border-surface object-cover" data-alt="A small, professional headshot portrait of a business person in a modern corporate setting, smiling, well-lit, high resolution, light background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5aSs6S8Dc4x468AeKqU0qkRAJS_uEGQ2B_GUeDWRfub2fmTHRshmwkX5V45S1DMk9MNOwcvYCis1Hd3AQ6ksqvRIBzUjanNgVe14CbdcdMnlNidFYRaeNsNLHUndvqwDiPLjXu9uVcrqMUO6fFygBuP8k9MehVqOYNn0i1qyZQv-8Dkzvq9-jaVW40CPMARH2OS03S2URf5yTN2q-dbPAHzoheia_IQPIzne9AxDqjzcqZJuL7PmNmsKixY7xQd-LSpsXXwbP3D7E"/>
-<img className="w-8 h-8 rounded-full border-2 border-surface object-cover" data-alt="A small, professional headshot portrait of a creative professional in a bright studio setting, neutral lighting, high resolution, corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtvXxCqS7jUqWQtBaIih2O7s_ZT1xQzduO9OGkgmHmW2K1jTEx5Cq1w54XdrTNXGy0qpMrJ0idwHQAWcYvJc9VkqzUhhg768gSonLCNr1Jj94wWjV5Lb3ncUajAwCeG8WoS0-mZ_BaGiYkZbziW0tIAwFUAkh8vb3g676_ak-zk2t08fkdnKrRwmxZ6Y6Cd5gVU1MPiveQuFWez7WnN1RfupcUn6nD975ZZf1t7Z1AGZ3OC8jHfOCXHGJeB8trZRvCNQHB2a0drGe-"/>
-<img className="w-8 h-8 rounded-full border-2 border-surface object-cover" data-alt="A small, professional headshot portrait of an entrepreneur looking confident, modern office backdrop, soft natural light, professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdp5yOS1yA4mmgdlooGXSkv4NvKAfbVmiFa2tLftUvAa1W5beCyDZDQUYTfuaefV4wYg-HSdQik2DoPLu35W4_WWUnWsuFqsAkWR83S3y1wxk5OZHRiPbuDe-nfZgkiTPUh3DMV2wJBxZah0bSd7P7NjNgOIPYDXqKn8IBSiBwoC43srsfI1522_NduA6bO_dH5mMCRSrvCyNe4wXC6ZTy5WzW3T1fKRfTDkubAlns6rzbw4p6TyyrG-GfQxfivgymfUsQwVhhhBjb"/>
-</div>
-<span>Trusted by 10,000+ professionals</span>
-</div>
-</div>
-<div className="flex-1 w-full relative z-10">
-<div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-outline-variant bg-surface-container">
-{/* Dashboard Mockup Image */}
-<img className="w-full h-full object-cover" data-alt="A highly detailed, professional UI design mockup of a financial dashboard application displayed on a modern laptop screen. The dashboard features clean charts, clean modern typography, blue and green brand colors, data tables showing expenses, and receipt scans. The setting is a clean, bright, modern home office desk with soft natural lighting and minimalist decor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_TUu-ihqIKIndtFhdUF9B2Hmzk2A38gD6HN4aNmVKcmO4cqT-h_Ay-yUPDofzwAUoJWpMFmlavzkBiTj2JscNVi8DRDabsMGs6bOiU7AowHDxkQQrgDMdK2dYsxnjsK8B90KPg4HKG3dSBGXXkEdgZ20nIzqD4eY7XWroPwSY2mue3P1XVNLdFYwPuf-Mb9xtsdj8Ea483bcYPgXrV8SDAMTnyqS6ZGUEH9SYhAj-3cNYUtjOuDYF_4vghKrS4vUuTPXXbpW3dlON"/>
-{/* Floating UI Card overlay to show off styling */}
-<div className="absolute bottom-6 left-6 glass-card rounded-xl p-4 shadow-lg animate-bounce" style={{"animationDuration":"3s"}}>
-<div className="flex items-center gap-3 mb-2">
-<div className="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
-<span className="material-symbols-outlined text-on-secondary-container" style={{"fontVariationSettings":"'FILL' 1"}}>check_circle</span>
-</div>
-<div>
-<p className="font-label-md text-label-md text-on-surface">Receipt Processed</p>
-<p className="font-body-sm text-body-sm text-on-surface-variant">Starbucks Coffee</p>
-</div>
-</div>
-<div className="flex justify-between items-end mt-2 pt-2 border-t border-outline-variant">
-<span className="font-body-sm text-body-sm text-on-surface-variant">Amount</span>
-<span className="font-numeric-data text-numeric-data text-on-background">$12.50</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-{/* Features Bento Grid */}
-<section className="w-full bg-surface-container-lowest py-24" id="features">
-<div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-<div className="text-center mb-16 max-w-2xl mx-auto">
-<h2 className="font-headline-lg text-headline-lg text-on-background mb-4">Everything you need for total financial clarity</h2>
-<p className="font-body-lg text-body-lg text-on-surface-variant">Powerful tools designed specifically for professionals who need accuracy without the administrative headache.</p>
-</div>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(250px,auto)]">
-{/* Feature 1: Automatic Analysis (Large span) */}
-<div className="md:col-span-2 bg-surface border border-outline-variant rounded-2xl p-8 flex flex-col sm:flex-row gap-8 hover:shadow-md transition-shadow">
-<div className="flex-1 flex flex-col justify-center">
-<div className="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-on-primary-container text-2xl" style={{"fontVariationSettings":"'FILL' 1"}}>document_scanner</span>
-</div>
-<h3 className="font-headline-md text-headline-md text-on-background mb-3">Automatic Receipt Analysis</h3>
-<p className="font-body-md text-body-md text-on-surface-variant mb-6">Simply snap a photo or forward an email. Our proprietary AI instantly extracts merchant, date, tax, and total amounts with 99.9% accuracy.</p>
-<a className="font-label-md text-label-md text-primary flex items-center gap-1 hover:underline mt-auto" href="#">
-                                See how it works <span className="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
-</div>
-<div className="flex-1 bg-surface-container-low rounded-xl border border-outline-variant overflow-hidden relative min-h-[200px]">
-<img className="w-full h-full object-cover absolute inset-0" data-alt="A close-up, high-quality photograph of a smartphone screen scanning a crisp white paper receipt laying on a clean wooden desk. The screen shows a green scanning overlay, highlighting text like prices and dates. The lighting is bright and professional, emphasizing modern technology and financial tracking." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBagbe_pXiBOkBjq3BrAgdZE1xQUn_u5o4c24-FJLJ0_rwB9R7R4kdO7wfBHr1sdQyUBVo2VFSAx4hZRNtaQNhqHzMMC5s19sPLiEn5LJ7B5mDNL64WfWTmWPc9RXk1gLa_iV1HVUf9bGUJR7ls4yv7vKDQTyfTxViKg2UvtKHhvRAfHuh21jtjL_6Xs2I6rI5LaPwTpm2PUScRKHyiRFipkYuPCxJgQL-qIekNgbWm7FiAtlAYYuzJWdioeNCr0-GSYzpbzlcq8Qa8"/>
-</div>
-</div>
-{/* Feature 2: Spending Metrics */}
-<div className="bg-surface border border-outline-variant rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow">
-<div className="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-on-secondary-container text-2xl" style={{"fontVariationSettings":"'FILL' 1"}}>pie_chart</span>
-</div>
-<h3 className="font-headline-md text-headline-md text-on-background mb-3">Real-time Metrics</h3>
-<p className="font-body-md text-body-md text-on-surface-variant mb-6">Visualize your cash flow with dynamic charts. Track spending across categories instantly.</p>
-{/* Mini Chart Visualization */}
-<div className="mt-auto bg-surface-container-low rounded-lg p-4 border border-outline-variant">
-<div className="flex justify-between items-end mb-2">
-<span className="font-body-sm text-body-sm text-on-surface-variant">This Month</span>
-<span className="font-numeric-data text-numeric-data text-secondary flex items-center"><span className="material-symbols-outlined text-sm">trending_up</span> $4,250</span>
-</div>
-<div className="flex gap-1 h-2 w-full rounded-full overflow-hidden">
-<div className="bg-secondary-fixed-dim w-1/2"></div>
-<div className="bg-primary-fixed-dim w-1/3"></div>
-<div className="bg-tertiary-fixed-dim w-1/6"></div>
-</div>
-</div>
-</div>
-{/* Feature 3: Budget Management */}
-<div className="bg-surface border border-outline-variant rounded-2xl p-8 flex flex-col hover:shadow-md transition-shadow">
-<div className="w-12 h-12 bg-tertiary-fixed rounded-lg flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-on-tertiary-fixed text-2xl" style={{"fontVariationSettings":"'FILL' 1"}}>account_balance</span>
-</div>
-<h3 className="font-headline-md text-headline-md text-on-background mb-3">Smart Budgets</h3>
-<p className="font-body-md text-body-md text-on-surface-variant mb-6">Set category limits and get proactive alerts before you overspend. Never miss a target.</p>
-<div className="mt-auto">
-<div className="flex justify-between font-label-md text-label-md mb-1">
-<span className="text-on-surface">Travel</span>
-<span className="text-on-surface-variant">85%</span>
-</div>
-<div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
-<div className="bg-tertiary-container h-full w-[85%] rounded-full"></div>
-</div>
-</div>
-</div>
-{/* Feature 4: Cloud Sync (Large span) */}
-<div className="md:col-span-2 bg-inverse-surface rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-8 relative overflow-hidden group">
-<div className="absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4 transition-transform group-hover:scale-110 duration-700">
-<span className="material-symbols-outlined text-[200px]" style={{"fontVariationSettings":"'FILL' 1"}}>cloud_sync</span>
-</div>
-<div className="flex-1 relative z-10">
-<h3 className="font-headline-md text-headline-md text-inverse-on-surface mb-3">Secure Cloud Sync</h3>
-<p className="font-body-md text-body-md text-surface-variant mb-6 max-w-md">Your data is encrypted and synced across all your devices in real-time. Access your financial intelligence from anywhere, securely.</p>
-<ul className="space-y-3 mb-6">
-<li className="flex items-center gap-2 text-surface-dim font-body-sm text-body-sm">
-<span className="material-symbols-outlined text-secondary-fixed text-sm">check</span> Bank-level 256-bit encryption
-                                </li>
-<li className="flex items-center gap-2 text-surface-dim font-body-sm text-body-sm">
-<span className="material-symbols-outlined text-secondary-fixed text-sm">check</span> Automatic daily backups
-                                </li>
-<li className="flex items-center gap-2 text-surface-dim font-body-sm text-body-sm">
-<span className="material-symbols-outlined text-secondary-fixed text-sm">check</span> Export to CSV, PDF, or accounting software
-                                </li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
-{/* CTA Section */}
-<section className="w-full bg-surface py-24 border-t border-outline-variant">
-<div className="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
-<span className="material-symbols-outlined text-primary text-5xl mb-6" style={{"fontVariationSettings":"'FILL' 1"}}>insights</span>
-<h2 className="font-display-lg text-display-lg text-on-background mb-6">Ready to take control?</h2>
-<p className="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto">Join thousands of professionals who have streamlined their expense tracking and gained clear financial intelligence with Lekha Tracker.</p>
-<div className="flex flex-col sm:flex-row justify-center gap-4">
-<a className="bg-primary text-on-primary font-label-md text-label-md py-4 px-10 rounded-lg hover:bg-primary-container transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2" href="/signup">
-                        Start Your Free Trial
-                    </a>
-<p className="font-body-sm text-body-sm text-on-surface-variant flex items-center justify-center sm:ml-4">
-                        No credit card required. <br className="sm:hidden"/>14-day free trial.
-                    </p>
-</div>
-</div>
-</section>
-</main>
-{/* Footer */}
-<footer className="w-full bg-surface-container-lowest border-t border-outline-variant py-12">
-<div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-primary text-xl" style={{"fontVariationSettings":"'FILL' 1"}}>account_balance_wallet</span>
-<span className="font-label-md text-label-md text-on-surface">Lekha Tracker © 2024</span>
-</div>
-<div className="flex gap-6">
-<a className="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
-<a className="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
-<a className="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
-</div>
-</div>
-</footer>
+                </div>
 
-    </>
+                <div className="mt-12 flex items-center gap-4">
+                    <div className="flex -space-x-3">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-30" />
+                        <img src="https://i.pravatar.cc/100?img=2" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-20" />
+                        <img src="https://i.pravatar.cc/100?img=3" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-10" />
+                        <div className="w-10 h-10 rounded-full border-2 border-dark-900 bg-slate-800 flex items-center justify-center text-xs font-medium text-white z-0">+10k</div>
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-1 text-brand-400">
+                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
+                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
+                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
+                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
+                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
+                        </div>
+                        <span className="text-sm text-slate-400 font-sans">Trusted by professionals</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex-1 w-full relative z-10 animate-float">
+                <div className="relative w-full aspect-[4/3] rounded-2xl p-2 glass-panel shadow-2xl border border-white/10">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/10 to-blue-500/10 rounded-2xl"></div>
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1000" alt="Dashboard Preview" className="w-full h-full object-cover rounded-xl opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" />
+                    
+                    {/* Floating Card */}
+                    <div className="absolute -bottom-6 -left-6 glass-panel rounded-xl p-5 shadow-2xl border border-white/10 animate-float-delayed w-64">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
+                                    <span className="material-symbols-rounded text-brand-400 text-[20px]">receipt_long</span>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-semibold text-white">Apple Store</p>
+                                    <p className="text-xs text-slate-400">Electronics</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-between items-end pt-3 border-t border-white/10">
+                            <span className="text-xs text-slate-400">Processed</span>
+                            <span className="font-display text-lg font-bold text-brand-400">$1,299.00</span>
+                        </div>
+                    </div>
+
+                    {/* Floating Card 2 */}
+                    <div className="absolute -top-6 -right-6 glass-panel rounded-xl p-4 shadow-2xl border border-white/10 animate-float w-48">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                                <span className="material-symbols-rounded text-green-400 text-[16px]">trending_up</span>
+                                <span className="text-sm font-medium text-white">Monthly Savings</span>
+                            </div>
+                            <span className="font-display text-2xl font-bold text-white">+24.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        {/* Features */}
+        <section id="features" className="py-24 relative z-10">
+            <div className="max-w-[1280px] mx-auto px-6">
+                <div className="text-center mb-20">
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Everything you need for<br/><span className="text-gradient">total financial clarity</span></h2>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Powerful tools designed specifically for professionals who need accuracy without the administrative headache.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Feature 1 */}
+                    <div className="md:col-span-2 glass-panel rounded-3xl p-8 card-hover flex flex-col md:flex-row gap-8 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full filter blur-[80px] group-hover:bg-brand-500/20 transition-colors duration-500"></div>
+                        <div className="flex-1 flex flex-col justify-center relative z-10">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-400/20 to-blue-500/20 flex items-center justify-center border border-white/10 mb-6">
+                                <span className="material-symbols-rounded text-brand-400 text-2xl">document_scanner</span>
+                            </div>
+                            <h3 className="font-display text-2xl font-bold text-white mb-4">Automatic Receipt Analysis</h3>
+                            <p className="text-slate-400 mb-8 leading-relaxed font-sans">Simply snap a photo or forward an email. Our proprietary AI instantly extracts merchant, date, tax, and total amounts with 99.9% accuracy.</p>
+                            <a href="#" className="inline-flex items-center gap-2 text-brand-400 font-medium hover:text-brand-300 transition-colors mt-auto w-fit">
+                                See how it works <span className="material-symbols-rounded text-[18px]">arrow_forward</span>
+                            </a>
+                        </div>
+                        <div className="flex-1 bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden relative min-h-[250px]">
+                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" alt="Scanning receipt" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                        </div>
+                    </div>
+
+                    {/* Feature 2 */}
+                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full filter blur-[60px] group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400/20 to-purple-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
+                            <span className="material-symbols-rounded text-blue-400 text-2xl">pie_chart</span>
+                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Real-time Metrics</h3>
+                        <p className="text-slate-400 mb-8 relative z-10 font-sans">Visualize your cash flow with dynamic charts. Track spending across categories instantly.</p>
+                        
+                        <div className="mt-auto glass rounded-xl p-5 border border-white/5 relative z-10">
+                            <div className="flex justify-between items-end mb-3">
+                                <span className="text-xs font-medium text-slate-400">This Month</span>
+                                <span className="font-display font-bold text-blue-400 text-lg">$4,250</span>
+                            </div>
+                            <div className="flex gap-1 h-2 w-full rounded-full overflow-hidden">
+                                <div className="bg-blue-400 w-1/2"></div>
+                                <div className="bg-brand-400 w-1/3"></div>
+                                <div className="bg-purple-400 w-1/6"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Feature 3 */}
+                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full filter blur-[60px] group-hover:bg-purple-500/20 transition-colors duration-500"></div>
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
+                            <span className="material-symbols-rounded text-purple-400 text-2xl">account_balance</span>
+                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Smart Budgets</h3>
+                        <p className="text-slate-400 mb-8 relative z-10 font-sans">Set category limits and get proactive alerts before you overspend. Never miss a target.</p>
+                        
+                        <div className="mt-auto relative z-10">
+                            <div className="flex justify-between text-sm font-medium mb-2">
+                                <span className="text-slate-300">Travel</span>
+                                <span className="text-slate-400">85%</span>
+                            </div>
+                            <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                                <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full w-[85%] rounded-full relative">
+                                    <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Feature 4 */}
+                    <div className="md:col-span-2 glass-panel rounded-3xl p-8 card-hover flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-brand-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute right-0 bottom-0 opacity-5 transform translate-x-1/4 translate-y-1/4 transition-transform group-hover:scale-110 duration-700">
+                            <span className="material-symbols-rounded text-[250px]">cloud_sync</span>
+                        </div>
+                        
+                        <div className="flex-1 relative z-10">
+                            <h3 className="font-display text-3xl font-bold text-white mb-4">Secure Cloud Sync</h3>
+                            <p className="text-slate-400 mb-8 max-w-[448px] text-lg font-sans">Your data is encrypted and synced across all your devices in real-time. Access your financial intelligence from anywhere, securely.</p>
+                            <ul className="space-y-4 font-sans">
+                                <li className="flex items-center gap-3 text-slate-300">
+                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
+                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
+                                    </div>
+                                    Bank-level 256-bit encryption
+                                </li>
+                                <li className="flex items-center gap-3 text-slate-300">
+                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
+                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
+                                    </div>
+                                    Automatic daily backups
+                                </li>
+                                <li className="flex items-center gap-3 text-slate-300">
+                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
+                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
+                                    </div>
+                                    Export to CSV, PDF, or accounting software
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-24 relative z-10">
+            <div className="max-w-[896px] mx-auto px-6 text-center">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-400/20 to-blue-500/20 flex items-center justify-center border border-white/10 mx-auto mb-8 relative">
+                    <div className="absolute inset-0 bg-brand-500/20 filter blur-xl rounded-2xl"></div>
+                    <span className="material-symbols-rounded text-brand-400 text-4xl relative z-10">rocket_launch</span>
+                </div>
+                <h2 className="font-display text-4xl md:text-6xl font-bold text-white mb-6">Ready to take control?</h2>
+                <p className="text-xl text-slate-400 mb-10 max-w-[672px] mx-auto font-sans">Join thousands of professionals who have streamlined their expense tracking and gained clear financial intelligence.</p>
+                
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
+                    <Link href="/signup" className="btn-glow px-10 py-5 rounded-full bg-white text-dark-900 font-bold text-lg hover:scale-105 transition-transform w-full sm:w-auto text-center shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+                        Start Your Free Trial
+                    </Link>
+                    <div className="text-left text-sm text-slate-400 flex flex-col justify-center font-sans">
+                        <span className="flex items-center gap-1"><span className="material-symbols-rounded text-[16px] text-brand-400">check_circle</span> No credit card required</span>
+                        <span className="flex items-center gap-1"><span className="material-symbols-rounded text-[16px] text-brand-400">check_circle</span> 14-day free trial</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t border-white/5 pt-12 pb-8 relative z-10 bg-dark-900/50 backdrop-blur-lg">
+            <div className="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-blue-500 flex items-center justify-center">
+                        <span className="material-symbols-rounded text-white text-[16px]">insights</span>
+                    </div>
+                    <span className="font-display font-medium text-white">Lekha Tracker © 2024</span>
+                </div>
+                
+                <div className="flex gap-8">
+                    <a href="#" className="text-sm text-slate-400 hover:text-brand-400 transition-colors">Privacy Policy</a>
+                    <a href="#" className="text-sm text-slate-400 hover:text-brand-400 transition-colors">Terms of Service</a>
+                    <a href="#" className="text-sm text-slate-400 hover:text-brand-400 transition-colors">Contact Support</a>
+                </div>
+            </div>
+        </footer>
+      </div>
+    </div>
   );
 }
