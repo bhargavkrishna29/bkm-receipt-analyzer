@@ -70,6 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   pages: {
-    signIn: '/', // Using custom homepage for signin
+    signIn: '/',        // custom homepage for signin
+    error: '/auth-error', // custom error page — avoids 404 on /api/auth/error
   },
 });
