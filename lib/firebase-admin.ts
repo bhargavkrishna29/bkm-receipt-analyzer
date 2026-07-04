@@ -4,11 +4,13 @@ if (!admin.apps.length) {
   try {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    // Handle both literal \n (from Vercel UI copy-paste) and real newlines
-    const rawKey = process.env.FIREBASE_PRIVATE_KEY ?? '';
-    const privateKey = rawKey.includes('\\n')
-      ? rawKey.replace(/\\n/g, '\n')
-      : rawKey;
+    // Handle both literal \n (from Vercel UI copy-paste), real newlines, and surrounding quotes
+    let rawKey = process.env.FIREBASE_PRIVATE_KEY ?? '';
+    if (rawKey.startsWith('"') && rawKey.endsWith('"')) {
+      rawKey = rawKey.slice(1, -1);
+    }
+    const privateKey = rawKey.replace(/\\n/g, '\n');
+
 
     if (projectId && clientEmail && privateKey) {
       admin.initializeApp({
