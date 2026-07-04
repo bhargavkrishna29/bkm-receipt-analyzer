@@ -1,8 +1,88 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function LandingPage() {
+  // Demo State
+  const [isDragging, setIsDragging] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoResult, setDemoResult] = useState<any>(null);
+  const [demoError, setDemoError] = useState<string | null>(null);
+  const [demoPreview, setDemoPreview] = useState<string | null>(null);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // FAQ State
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const handleFileChange = async (file: File) => {
+    if (!file) return;
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => setDemoPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+
+    // Call API
+    setDemoLoading(true);
+    setDemoError(null);
+    setDemoResult(null);
+
+    try {
+      const base64Reader = new FileReader();
+      base64Reader.readAsDataURL(file);
+      base64Reader.onload = async () => {
+        const result = base64Reader.result as string;
+        const base64Data = result.split(',')[1];
+        
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64Data,
+            mediaType: file.type,
+            existingExpenses: [] // No history for the demo
+          })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to analyze receipt');
+        }
+
+        setDemoResult(data);
+      };
+    } catch (err: any) {
+      setDemoError(err.message || 'Something went wrong.');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleFileChange(e.dataTransfer.files[0]);
+    }
+  };
+
   return (
     <div className="dark bg-[#050507] text-slate-200 min-h-screen overflow-x-hidden selection:bg-brand-500 selection:text-white" style={{ scrollBehavior: 'smooth' }}>
       <style dangerouslySetInnerHTML={{
@@ -90,16 +170,16 @@ export default function LandingPage() {
                 </Link>
                 
                 <nav className="hidden md:flex items-center gap-8">
-                    <a href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
-                        Features
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
                     <a href="#how-it-works" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
                         How it Works
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
                     </a>
-                    <a href="#testimonials" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
-                        Success Stories
+                    <a href="#demo" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
+                        Live Demo
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
+                        Features
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 </nav>
@@ -122,7 +202,7 @@ export default function LandingPage() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
                     </span>
-                    <span className="text-xs font-medium text-brand-100 uppercase tracking-wider">AI Receipt Parsing is live</span>
+                    <span className="text-xs font-medium text-brand-100 uppercase tracking-wider">Powered by Gemini AI</span>
                 </div>
                 
                 <h1 className="font-display text-5xl md:text-7xl font-bold leading-[1.1] mb-6 text-white">
@@ -131,7 +211,7 @@ export default function LandingPage() {
                 </h1>
                 
                 <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-[576px] leading-relaxed font-sans">
-                    Transform chaotic receipts into actionable insights. Lekha Tracker automatically extracts data, categorizes spending, and provides a clear picture of your financial health.
+                    Transform chaotic receipts into actionable insights. Lekha Tracker automatically extracts data, categorizes spending, handles multi-currency conversions, and provides a clear picture of your financial health.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -139,28 +219,9 @@ export default function LandingPage() {
                         Start Free Trial
                     </Link>
                     <a href="#demo" className="px-8 py-4 rounded-full glass text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2 border border-white/10">
-                        <span className="material-symbols-rounded">play_circle</span>
-                        Watch Demo
+                        <span className="material-symbols-rounded">science</span>
+                        Try it Now
                     </a>
-                </div>
-
-                <div className="mt-12 flex items-center gap-4">
-                    <div className="flex -space-x-3">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-30" />
-                        <img src="https://i.pravatar.cc/100?img=2" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-20" />
-                        <img src="https://i.pravatar.cc/100?img=3" alt="User" className="w-10 h-10 rounded-full border-2 border-dark-900 z-10" />
-                        <div className="w-10 h-10 rounded-full border-2 border-dark-900 bg-slate-800 flex items-center justify-center text-xs font-medium text-white z-0">+10k</div>
-                    </div>
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-1 text-brand-400">
-                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
-                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
-                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
-                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
-                            <span className="material-symbols-rounded text-[16px] fill-current">star</span>
-                        </div>
-                        <span className="text-sm text-slate-400 font-sans">Trusted by professionals</span>
-                    </div>
                 </div>
             </div>
 
@@ -187,125 +248,283 @@ export default function LandingPage() {
                             <span className="font-display text-lg font-bold text-brand-400">$1,299.00</span>
                         </div>
                     </div>
-
-                    {/* Floating Card 2 */}
-                    <div className="absolute -top-6 -right-6 glass-panel rounded-xl p-4 shadow-2xl border border-white/10 animate-float w-48">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2">
-                                <span className="material-symbols-rounded text-green-400 text-[16px]">trending_up</span>
-                                <span className="text-sm font-medium text-white">Monthly Savings</span>
-                            </div>
-                            <span className="font-display text-2xl font-bold text-white">+24.5%</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>
 
-        {/* Features */}
-        <section id="features" className="py-24 relative z-10">
+        {/* How It Works */}
+        <section id="how-it-works" className="py-24 relative z-10 bg-slate-900/30 border-y border-white/5">
+            <div className="max-w-[1280px] mx-auto px-6">
+                <div className="text-center mb-16">
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">How <span className="text-gradient">Lekha Tracker</span> Works</h2>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Three simple steps to completely automate your expense management.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-brand-500/30 text-3xl font-bold text-brand-400 mb-6 shadow-[0_0_30px_rgba(45,212,191,0.2)]">1</div>
+                        <h3 className="text-xl font-bold text-white mb-3">Snap & Upload</h3>
+                        <p className="text-slate-400 font-sans">Take a photo of any receipt, in any language or currency. Upload it directly to the dashboard.</p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-blue-500/30 text-3xl font-bold text-blue-400 mb-6 shadow-[0_0_30px_rgba(59,130,246,0.2)]">2</div>
+                        <h3 className="text-xl font-bold text-white mb-3">AI Parsing</h3>
+                        <p className="text-slate-400 font-sans">Our Gemini-powered AI extracts the merchant name, date, every single line item, tax, and categorizes everything instantly.</p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-purple-500/30 text-3xl font-bold text-purple-400 mb-6 shadow-[0_0_30px_rgba(168,85,247,0.2)]">3</div>
+                        <h3 className="text-xl font-bold text-white mb-3">Track & Save</h3>
+                        <p className="text-slate-400 font-sans">View your expenses in a beautiful Dashboard. Multi-currency conversions are handled automatically so your budget is always accurate.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/* Interactive Demo Section */}
+        <section id="demo" className="py-24 relative z-10">
+            <div className="max-w-[1000px] mx-auto px-6">
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-blue-500/30 mb-6">
+                        <span className="material-symbols-rounded text-blue-400 text-sm">science</span>
+                        <span className="text-xs font-medium text-blue-100 uppercase tracking-wider">Live Sandbox</span>
+                    </div>
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Experience the AI <span className="text-gradient">Magic</span></h2>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Don't just take our word for it. Upload a sample receipt right now and watch our AI extract every line item, categorize it, and calculate totals in real-time. No sign up required.</p>
+                </div>
+
+                <div className="glass-panel rounded-3xl border border-white/10 p-6 md:p-10 shadow-2xl">
+                    {!demoPreview && !demoLoading && (
+                        <div 
+                            className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${isDragging ? 'border-brand-500 bg-brand-500/10' : 'border-slate-600 hover:border-slate-400 hover:bg-slate-800/50'}`}
+                            onDragOver={onDragOver}
+                            onDragLeave={onDragLeave}
+                            onDrop={onDrop}
+                            onClick={() => fileInputRef.current?.click()}
+                        >
+                            <span className="material-symbols-rounded text-5xl text-slate-400 mb-4 block">cloud_upload</span>
+                            <h3 className="text-xl font-semibold text-white mb-2">Drag and drop a receipt image</h3>
+                            <p className="text-slate-400 mb-6 text-sm">Supports JPG, PNG, WEBP (Max 4MB)</p>
+                            
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                className="hidden" 
+                                ref={fileInputRef}
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        handleFileChange(e.target.files[0]);
+                                    }
+                                }}
+                            />
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                                className="px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-600 transition-colors pointer-events-none"
+                            >
+                                Browse Files
+                            </button>
+                        </div>
+                    )}
+
+                    {demoLoading && (
+                        <div className="py-20 text-center flex flex-col items-center">
+                            <span className="material-symbols-rounded text-6xl text-brand-500 animate-spin mb-6">progress_activity</span>
+                            <h3 className="text-2xl font-bold text-white mb-2">Analyzing Receipt...</h3>
+                            <p className="text-slate-400">Gemini AI is reading every line item and categorizing your expenses.</p>
+                        </div>
+                    )}
+
+                    {demoError && (
+                        <div className="py-12 text-center">
+                            <span className="material-symbols-rounded text-5xl text-red-400 mb-4 block">error</span>
+                            <h3 className="text-xl font-semibold text-white mb-2">Analysis Failed</h3>
+                            <p className="text-red-400 mb-6">{demoError}</p>
+                            <button 
+                                onClick={() => { setDemoError(null); setDemoPreview(null); }}
+                                className="px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-600 transition-colors"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
+                    {demoResult && demoPreview && !demoLoading && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {/* Original Image */}
+                            <div className="flex flex-col">
+                                <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 flex items-center justify-between">
+                                    Original Receipt
+                                    <button 
+                                        onClick={() => { setDemoResult(null); setDemoPreview(null); }}
+                                        className="text-brand-400 text-xs hover:underline normal-case"
+                                    >
+                                        Upload Another
+                                    </button>
+                                </h4>
+                                <div className="bg-black/50 rounded-xl overflow-hidden border border-white/5 flex-1 relative min-h-[400px]">
+                                    <img src={demoPreview} alt="Receipt Preview" className="absolute inset-0 w-full h-full object-contain p-4" />
+                                </div>
+                            </div>
+
+                            {/* Extracted Data */}
+                            <div className="flex flex-col">
+                                <h4 className="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <span className="material-symbols-rounded text-[18px]">auto_awesome</span>
+                                    AI Extraction Results
+                                </h4>
+                                <div className="glass rounded-xl p-6 border border-brand-500/20 flex-1 overflow-y-auto max-h-[500px]">
+                                    
+                                    <div className="flex justify-between items-start mb-6 pb-6 border-b border-white/10">
+                                        <div>
+                                            <p className="text-sm text-slate-400 mb-1">Merchant</p>
+                                            <p className="text-2xl font-bold text-white">{demoResult.receipt?.merchant}</p>
+                                            <p className="text-sm text-slate-400 mt-1 flex items-center gap-2">
+                                                <span className="material-symbols-rounded text-[16px]">calendar_today</span>
+                                                {demoResult.receipt?.date || 'Unknown Date'}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm text-slate-400 mb-1">Total</p>
+                                            <p className="text-3xl font-display font-bold text-green-400">
+                                                {Number(demoResult.receipt?.total || 0).toFixed(2)} <span className="text-lg">{demoResult.receipt?.currency}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-6">
+                                        <p className="text-sm font-medium text-slate-300 mb-3">Line Items ({demoResult.receipt?.items?.length || 0})</p>
+                                        <div className="space-y-3">
+                                            {demoResult.receipt?.items?.map((item: any, idx: number) => (
+                                                <div key={idx} className="bg-slate-800/50 rounded-lg p-3 flex justify-between items-center border border-white/5">
+                                                    <div>
+                                                        <p className="font-medium text-slate-200">{item.name}</p>
+                                                        <p className="text-xs text-brand-300">{item.itemCategory}</p>
+                                                    </div>
+                                                    <p className="font-semibold text-white">{Number(item.amount || 0).toFixed(2)}</p>
+                                                </div>
+                                            ))}
+                                            {(!demoResult.receipt?.items || demoResult.receipt?.items.length === 0) && (
+                                                <p className="text-sm text-slate-500 italic">No line items detected.</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-6 border-t border-white/10">
+                                        <p className="text-sm text-slate-400 mb-2">Primary Category: <strong className="text-white">{demoResult.receipt?.receiptCategory}</strong></p>
+                                        <p className="text-sm text-slate-400 mb-2">Tax Amount: <strong className="text-white">{demoResult.receipt?.taxAmount}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {demoResult && (
+                        <div className="mt-8 text-center bg-brand-500/10 border border-brand-500/20 rounded-xl p-6">
+                            <h4 className="text-xl font-semibold text-white mb-2">Impressed? Let's save this receipt.</h4>
+                            <p className="text-slate-400 mb-6">Create a free account to track your expenses, view analytics, and manage budgets.</p>
+                            <Link href="/signup" className="btn-glow px-8 py-3 rounded-full bg-white text-dark-900 font-bold hover:scale-105 transition-transform inline-block">
+                                Create Free Account
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </section>
+
+        {/* Features Showcase (Dashboard Preview) */}
+        <section id="features" className="py-24 relative z-10 bg-slate-900/30 border-y border-white/5">
             <div className="max-w-[1280px] mx-auto px-6">
                 <div className="text-center mb-20">
                     <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Everything you need for<br/><span className="text-gradient">total financial clarity</span></h2>
-                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Powerful tools designed specifically for professionals who need accuracy without the administrative headache.</p>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Once logged in, Lekha Tracker provides a powerful dashboard specifically designed to help you analyze your spending habits effortlessly.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Feature 1 */}
-                    <div className="md:col-span-2 glass-panel rounded-3xl p-8 card-hover flex flex-col md:flex-row gap-8 overflow-hidden relative group">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/10 rounded-full filter blur-[80px] group-hover:bg-brand-500/20 transition-colors duration-500"></div>
-                        <div className="flex-1 flex flex-col justify-center relative z-10">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-400/20 to-blue-500/20 flex items-center justify-center border border-white/10 mb-6">
-                                <span className="material-symbols-rounded text-brand-400 text-2xl">document_scanner</span>
-                            </div>
-                            <h3 className="font-display text-2xl font-bold text-white mb-4">Automatic Receipt Analysis</h3>
-                            <p className="text-slate-400 mb-8 leading-relaxed font-sans">Simply snap a photo or forward an email. Our proprietary AI instantly extracts merchant, date, tax, and total amounts with 99.9% accuracy.</p>
-                            <a href="#" className="inline-flex items-center gap-2 text-brand-400 font-medium hover:text-brand-300 transition-colors mt-auto w-fit">
-                                See how it works <span className="material-symbols-rounded text-[18px]">arrow_forward</span>
-                            </a>
+                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-400/20 to-blue-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
+                            <span className="material-symbols-rounded text-brand-400 text-2xl">dashboard</span>
                         </div>
-                        <div className="flex-1 bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden relative min-h-[250px]">
-                            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800" alt="Scanning receipt" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Bento-style Dashboard</h3>
+                        <p className="text-slate-400 mb-6 relative z-10 font-sans">A beautiful, at-a-glance dashboard that shows your total spent, remaining budget, average spend per receipt, and top merchants.</p>
+                        <ul className="space-y-3 mb-8">
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-brand-400 text-[18px]">check_circle</span> Real-time budget tracking</li>
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-brand-400 text-[18px]">check_circle</span> Top categories breakdown</li>
+                        </ul>
                     </div>
 
                     {/* Feature 2 */}
                     <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full filter blur-[60px] group-hover:bg-blue-500/20 transition-colors duration-500"></div>
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400/20 to-purple-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-blue-400 text-2xl">pie_chart</span>
+                            <span className="material-symbols-rounded text-blue-400 text-2xl">currency_exchange</span>
                         </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Real-time Metrics</h3>
-                        <p className="text-slate-400 mb-8 relative z-10 font-sans">Visualize your cash flow with dynamic charts. Track spending across categories instantly.</p>
-                        
-                        <div className="mt-auto glass rounded-xl p-5 border border-white/5 relative z-10">
-                            <div className="flex justify-between items-end mb-3">
-                                <span className="text-xs font-medium text-slate-400">This Month</span>
-                                <span className="font-display font-bold text-blue-400 text-lg">$4,250</span>
-                            </div>
-                            <div className="flex gap-1 h-2 w-full rounded-full overflow-hidden">
-                                <div className="bg-blue-400 w-1/2"></div>
-                                <div className="bg-brand-400 w-1/3"></div>
-                                <div className="bg-purple-400 w-1/6"></div>
-                            </div>
-                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Multi-Currency Support</h3>
+                        <p className="text-slate-400 mb-6 relative z-10 font-sans">Travel a lot? Scan receipts in Euros, Dollars, or SEK. Lekha Tracker automatically converts all amounts to your preferred base currency so your budget stays perfectly accurate.</p>
+                        <ul className="space-y-3 mb-8">
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-blue-400 text-[18px]">check_circle</span> Live exchange rates</li>
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-blue-400 text-[18px]">check_circle</span> Select base currency in settings</li>
+                        </ul>
                     </div>
 
                     {/* Feature 3 */}
                     <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full filter blur-[60px] group-hover:bg-purple-500/20 transition-colors duration-500"></div>
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-purple-400 text-2xl">account_balance</span>
+                            <span className="material-symbols-rounded text-purple-400 text-2xl">tips_and_updates</span>
                         </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Smart Budgets</h3>
-                        <p className="text-slate-400 mb-8 relative z-10 font-sans">Set category limits and get proactive alerts before you overspend. Never miss a target.</p>
-                        
-                        <div className="mt-auto relative z-10">
-                            <div className="flex justify-between text-sm font-medium mb-2">
-                                <span className="text-slate-300">Travel</span>
-                                <span className="text-slate-400">85%</span>
-                            </div>
-                            <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
-                                <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-full w-[85%] rounded-full relative">
-                                    <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Smart AI Insights</h3>
+                        <p className="text-slate-400 mb-6 relative z-10 font-sans">The AI doesn't just read receipts—it analyzes your habits. Get personalized suggestions on where to cut back, identify subscription traps, and optimize your spending.</p>
+                        <ul className="space-y-3 mb-8">
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-purple-400 text-[18px]">check_circle</span> Personalized saving tips</li>
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-purple-400 text-[18px]">check_circle</span> Monthly trend analysis</li>
+                        </ul>
                     </div>
 
                     {/* Feature 4 */}
-                    <div className="md:col-span-2 glass-panel rounded-3xl p-8 card-hover flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-brand-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div className="absolute right-0 bottom-0 opacity-5 transform translate-x-1/4 translate-y-1/4 transition-transform group-hover:scale-110 duration-700">
-                            <span className="material-symbols-rounded text-[250px]">cloud_sync</span>
+                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400/20 to-teal-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
+                            <span className="material-symbols-rounded text-green-400 text-2xl">manage_search</span>
                         </div>
-                        
-                        <div className="flex-1 relative z-10">
-                            <h3 className="font-display text-3xl font-bold text-white mb-4">Secure Cloud Sync</h3>
-                            <p className="text-slate-400 mb-8 max-w-[448px] text-lg font-sans">Your data is encrypted and synced across all your devices in real-time. Access your financial intelligence from anywhere, securely.</p>
-                            <ul className="space-y-4 font-sans">
-                                <li className="flex items-center gap-3 text-slate-300">
-                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
-                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
-                                    </div>
-                                    Bank-level 256-bit encryption
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-300">
-                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
-                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
-                                    </div>
-                                    Automatic daily backups
-                                </li>
-                                <li className="flex items-center gap-3 text-slate-300">
-                                    <div className="w-6 h-6 rounded-full bg-brand-500/20 flex items-center justify-center border border-brand-500/30">
-                                        <span className="material-symbols-rounded text-brand-400 text-[14px]">check</span>
-                                    </div>
-                                    Export to CSV, PDF, or accounting software
-                                </li>
-                            </ul>
-                        </div>
+                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Advanced Search & Filters</h3>
+                        <p className="text-slate-400 mb-6 relative z-10 font-sans">Find exactly what you're looking for. Search not just by merchant, but by specific line items across all your receipts (e.g. "Coffee" or "Laptop").</p>
+                        <ul className="space-y-3 mb-8">
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-green-400 text-[18px]">check_circle</span> Item-level search queries</li>
+                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-green-400 text-[18px]">check_circle</span> Filter by date and category</li>
+                        </ul>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-24 relative z-10">
+            <div className="max-w-[800px] mx-auto px-6">
+                <div className="text-center mb-16">
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Frequently Asked Questions</h2>
+                </div>
+
+                <div className="space-y-4">
+                    {[
+                        { q: "Is my financial data secure?", a: "Yes. We use industry-standard encryption. Your receipts are parsed via secure API and stored safely. Passwords are never saved in plain text, and we support Google SSO for added security." },
+                        { q: "Can it read handwritten receipts?", a: "Our Gemini AI model is incredibly powerful and can read many handwritten receipts with high accuracy, though clearly printed receipts will always yield the best results." },
+                        { q: "What currencies are supported?", a: "The AI recognizes almost any currency symbol globally. The dashboard currently supports live conversion for major currencies like USD, EUR, GBP, and SEK, which you can set in your settings." },
+                        { q: "Do I need to categorize items myself?", a: "No! The AI automatically assigns a primary category for the receipt (e.g. Groceries) and specific sub-categories for every single line item (e.g. Dairy, Produce)." }
+                    ].map((faq, i) => (
+                        <div key={i} className="glass-panel border border-white/10 rounded-xl overflow-hidden transition-all duration-300">
+                            <button 
+                                onClick={() => toggleFaq(i)}
+                                className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-white/5 transition-colors"
+                            >
+                                <span className="font-medium text-white text-lg">{faq.q}</span>
+                                <span className={`material-symbols-rounded text-brand-400 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`}>
+                                    expand_more
+                                </span>
+                            </button>
+                            <div 
+                                className={`px-6 overflow-hidden transition-all duration-300 ease-in-out ${openFaq === i ? 'max-h-40 py-4 border-t border-white/10' : 'max-h-0 py-0'}`}
+                            >
+                                <p className="text-slate-400 leading-relaxed">{faq.a}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>
