@@ -1,0 +1,6 @@
+# Exclude the legacy Express server — these files are not used in production.
+# The Next.js app/api/ routes handle all API endpoints.
+# Without this, Vercel tries to deploy api/analyze.js & api/insights.js as
+# serverless functions, which collides with the Next.js app/api/analyze/ route
+# causing: Error: EEXIST: file already exists, symlink '...api/analyze.func'
+api/
