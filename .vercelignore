@@ -3,4 +3,4 @@
 # Without this, Vercel tries to deploy api/analyze.js & api/insights.js as
 # serverless functions, which collides with the Next.js app/api/analyze/ route
 # causing: Error: EEXIST: file already exists, symlink '...api/analyze.func'
-api/
+/api/

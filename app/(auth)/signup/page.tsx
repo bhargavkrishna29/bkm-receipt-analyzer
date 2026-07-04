@@ -25,14 +25,21 @@ export default function SignupPage() {
     try {
       const credential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       if (name) await updateProfile(credential.user, { displayName: name });
-      try {
-        const { saveBudget } = await import('@/app/actions/db');
-        await saveBudget(5000);
-      } catch (e) { console.error('Failed to initialize user data:', e); }
       const idToken = await credential.user.getIdToken();
       const result = await signIn('firebase-credentials', { idToken, redirect: false });
-      if (result?.error) { setError('Failed to sign in after registration.'); }
-      else { router.push('/dashboard'); }
+      
+      if (result?.error) { 
+        setError('Failed to sign in after registration.'); 
+      } else { 
+        // Now that the session is established, initialize the budget
+        try {
+          const { saveBudget } = await import('@/app/actions/db');
+          await saveBudget(5000);
+        } catch (e) { 
+          console.error('Failed to initialize user data:', e); 
+        }
+        router.push('/dashboard'); 
+      }
     } catch (err: unknown) {
       const code = (err as { code?: string }).code ?? '';
       setError(code === 'auth/email-already-in-use' ? 'An account with this email already exists.' : 'Sign up failed. Please try again.');
