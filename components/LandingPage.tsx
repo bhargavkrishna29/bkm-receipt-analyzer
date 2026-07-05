@@ -13,6 +13,7 @@ export default function LandingPage() {
   const [demoPreview, setDemoPreview] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   // FAQ State
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -420,12 +421,35 @@ export default function LandingPage() {
                                     }
                                 }}
                             />
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                                className="px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-600 transition-colors pointer-events-none"
-                            >
-                                Browse Files
-                            </button>
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                capture="environment"
+                                className="hidden" 
+                                ref={cameraInputRef}
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        handleFileChange(e.target.files[0]);
+                                    }
+                                }}
+                            />
+                            
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
+                                    className="px-6 py-3 rounded-full bg-brand-600 hover:bg-brand-500 text-white font-medium shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center gap-2"
+                                >
+                                    <span className="material-symbols-rounded text-[20px]">photo_camera</span>
+                                    Take Photo
+                                </button>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                                    className="px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-600 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <span className="material-symbols-rounded text-[20px]">folder</span>
+                                    Browse Files
+                                </button>
+                            </div>
                         </div>
                     )}
 
