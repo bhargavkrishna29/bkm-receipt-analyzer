@@ -17,6 +17,9 @@ export default function LandingPage() {
   // FAQ State
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  // Features Tour State
+  const [activeFeature, setActiveFeature] = useState(0);
+
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };
@@ -82,6 +85,143 @@ export default function LandingPage() {
       handleFileChange(e.dataTransfer.files[0]);
     }
   };
+
+  const features = [
+    {
+        title: "Bento-style Dashboard",
+        icon: "dashboard",
+        color: "text-brand-400",
+        bgColor: "bg-brand-500/20",
+        borderColor: "border-brand-500/30",
+        description: "A beautiful, at-a-glance dashboard that shows your total spent, remaining budget, average spend per receipt, and top merchants.",
+        mockUi: (
+            <div className="grid grid-cols-2 gap-4 h-full">
+                <div className="col-span-2 glass border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div>
+                        <p className="text-slate-400 text-xs uppercase mb-1">Total Spent</p>
+                        <p className="text-white text-3xl font-display font-bold">$4,250.00</p>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-slate-400 text-xs uppercase mb-1">Remaining Budget</p>
+                        <p className="text-brand-400 text-2xl font-bold">$750.00</p>
+                    </div>
+                </div>
+                <div className="glass border border-white/10 rounded-xl p-4 flex flex-col justify-center">
+                    <p className="text-slate-400 text-xs uppercase mb-2">Top Merchant</p>
+                    <p className="text-white font-bold mb-1">Apple Store</p>
+                    <p className="text-xs text-slate-500">2 purchases</p>
+                </div>
+                <div className="glass border border-white/10 rounded-xl p-4 flex flex-col justify-center">
+                    <p className="text-slate-400 text-xs uppercase mb-2">Top Category</p>
+                    <p className="text-white font-bold mb-1">Electronics</p>
+                    <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2">
+                        <div className="bg-brand-400 w-3/4 h-full rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    },
+    {
+        title: "Multi-Currency Tracking",
+        icon: "currency_exchange",
+        color: "text-blue-400",
+        bgColor: "bg-blue-500/20",
+        borderColor: "border-blue-500/30",
+        description: "Scan receipts in Euros, Dollars, or SEK. Lekha Tracker automatically converts all amounts to your preferred base currency.",
+        mockUi: (
+            <div className="flex flex-col gap-3 h-full justify-center">
+                <div className="glass border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-lg font-bold text-white border border-white/10">€</div>
+                        <div>
+                            <p className="text-white font-medium">Dinner in Paris</p>
+                            <p className="text-xs text-slate-400">EUR • Yesterday</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-white font-bold">€120.00</p>
+                        <p className="text-xs text-brand-400">≈ $131.40 USD</p>
+                    </div>
+                </div>
+                <div className="glass border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-lg font-bold text-white border border-white/10">kr</div>
+                        <div>
+                            <p className="text-white font-medium">Fika in Stockholm</p>
+                            <p className="text-xs text-slate-400">SEK • Last Week</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-white font-bold">450 kr</p>
+                        <p className="text-xs text-brand-400">≈ $43.20 USD</p>
+                    </div>
+                </div>
+            </div>
+        )
+    },
+    {
+        title: "Smart AI Insights",
+        icon: "tips_and_updates",
+        color: "text-purple-400",
+        bgColor: "bg-purple-500/20",
+        borderColor: "border-purple-500/30",
+        description: "The AI doesn't just read receipts—it analyzes your habits and gives personalized tips to optimize your spending.",
+        mockUi: (
+            <div className="flex flex-col h-full justify-center">
+                <div className="glass border border-purple-500/30 rounded-xl p-5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/20 blur-2xl rounded-full"></div>
+                    <div className="flex items-start gap-3 mb-4">
+                        <span className="material-symbols-rounded text-purple-400">auto_awesome</span>
+                        <div>
+                            <p className="text-white font-medium mb-1">Saving Opportunity Found</p>
+                            <p className="text-sm text-slate-300 leading-relaxed">
+                                You have spent $145.00 on coffee shops this month across 24 receipts. Try making coffee at home twice a week to save approximately $45/month.
+                            </p>
+                        </div>
+                    </div>
+                    <div className="bg-black/30 rounded-lg p-3 border border-white/5 flex items-center justify-between">
+                        <span className="text-xs text-slate-400">Potential Annual Savings</span>
+                        <span className="text-purple-400 font-bold">$540.00</span>
+                    </div>
+                </div>
+            </div>
+        )
+    },
+    {
+        title: "Advanced Search",
+        icon: "manage_search",
+        color: "text-green-400",
+        bgColor: "bg-green-500/20",
+        borderColor: "border-green-500/30",
+        description: "Search not just by merchant, but by specific line items across all your receipts (e.g. 'Coffee' or 'Laptop').",
+        mockUi: (
+            <div className="flex flex-col h-full">
+                <div className="bg-slate-900 rounded-lg border border-white/10 p-2 mb-4 flex items-center gap-2">
+                    <span className="material-symbols-rounded text-slate-400 text-[20px] ml-2">search</span>
+                    <span className="text-white font-medium text-sm border-r border-white/20 pr-2">"Laptop charger"</span>
+                    <span className="text-xs text-slate-500">Searching all line items...</span>
+                </div>
+                
+                <div className="space-y-3">
+                    <div className="glass border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                        <div>
+                            <p className="text-white font-medium text-sm">Best Buy</p>
+                            <p className="text-xs text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded inline-block mt-1">Matched item: 65W USB-C Charger</p>
+                        </div>
+                        <p className="text-white font-bold text-sm">$49.99</p>
+                    </div>
+                    <div className="glass border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                        <div>
+                            <p className="text-white font-medium text-sm">Amazon</p>
+                            <p className="text-xs text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded inline-block mt-1">Matched item: Laptop Power Cable</p>
+                        </div>
+                        <p className="text-white font-bold text-sm">$15.50</p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+  ];
 
   return (
     <div className="dark bg-[#050507] text-slate-200 min-h-screen overflow-x-hidden selection:bg-brand-500 selection:text-white" style={{ scrollBehavior: 'smooth' }}>
@@ -175,11 +315,7 @@ export default function LandingPage() {
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                     <a href="#demo" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
-                        Live Demo
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
-                    <a href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors relative group">
-                        Features
+                        Live Product Demo
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-400 transition-all duration-300 group-hover:w-full"></span>
                     </a>
                 </nav>
@@ -218,9 +354,9 @@ export default function LandingPage() {
                     <Link href="/signup" className="btn-glow px-8 py-4 rounded-full bg-gradient-to-r from-brand-500 to-blue-600 text-white font-semibold shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all flex items-center justify-center gap-2">
                         Start Free Trial
                     </Link>
-                    <a href="#demo" className="px-8 py-4 rounded-full glass text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2 border border-white/10">
+                    <a href="#how-it-works" className="px-8 py-4 rounded-full glass text-white font-medium hover:bg-white/5 transition-colors flex items-center justify-center gap-2 border border-white/10">
                         <span className="material-symbols-rounded">science</span>
-                        Try it Now
+                        Test the AI
                     </a>
                 </div>
             </div>
@@ -252,47 +388,15 @@ export default function LandingPage() {
             </div>
         </main>
 
-        {/* How It Works */}
+        {/* How It Works (Now includes the Interactive AI Demo) */}
         <section id="how-it-works" className="py-24 relative z-10 bg-slate-900/30 border-y border-white/5">
             <div className="max-w-[1280px] mx-auto px-6">
                 <div className="text-center mb-16">
-                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">How <span className="text-gradient">Lekha Tracker</span> Works</h2>
-                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Three simple steps to completely automate your expense management.</p>
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">How It Works <span className="text-gradient">(Try it yourself!)</span></h2>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Upload a real receipt below. We won't save it, but our AI will instantly read and organize it for you.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                    <div className="flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-brand-500/30 text-3xl font-bold text-brand-400 mb-6 shadow-[0_0_30px_rgba(45,212,191,0.2)]">1</div>
-                        <h3 className="text-xl font-bold text-white mb-3">Snap & Upload</h3>
-                        <p className="text-slate-400 font-sans">Take a photo of any receipt, in any language or currency. Upload it directly to the dashboard.</p>
-                    </div>
-                    <div className="flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-blue-500/30 text-3xl font-bold text-blue-400 mb-6 shadow-[0_0_30px_rgba(59,130,246,0.2)]">2</div>
-                        <h3 className="text-xl font-bold text-white mb-3">AI Parsing</h3>
-                        <p className="text-slate-400 font-sans">Our Gemini-powered AI extracts the merchant name, date, every single line item, tax, and categorizes everything instantly.</p>
-                    </div>
-                    <div className="flex flex-col items-center text-center">
-                        <div className="w-20 h-20 rounded-full glass-panel flex items-center justify-center border border-purple-500/30 text-3xl font-bold text-purple-400 mb-6 shadow-[0_0_30px_rgba(168,85,247,0.2)]">3</div>
-                        <h3 className="text-xl font-bold text-white mb-3">Track & Save</h3>
-                        <p className="text-slate-400 font-sans">View your expenses in a beautiful Dashboard. Multi-currency conversions are handled automatically so your budget is always accurate.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        {/* Interactive Demo Section */}
-        <section id="demo" className="py-24 relative z-10">
-            <div className="max-w-[1000px] mx-auto px-6">
-                <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-blue-500/30 mb-6">
-                        <span className="material-symbols-rounded text-blue-400 text-sm">science</span>
-                        <span className="text-xs font-medium text-blue-100 uppercase tracking-wider">Live Sandbox</span>
-                    </div>
-                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Experience the AI <span className="text-gradient">Magic</span></h2>
-                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Don't just take our word for it. Upload a sample receipt right now and watch our AI extract every line item, categorize it, and calculate totals in real-time. No sign up required.</p>
-                </div>
-
-                <div className="glass-panel rounded-3xl border border-white/10 p-6 md:p-10 shadow-2xl">
+                <div className="glass-panel rounded-3xl border border-white/10 p-6 md:p-10 shadow-2xl mb-12">
                     {!demoPreview && !demoLoading && (
                         <div 
                             className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all cursor-pointer ${isDragging ? 'border-brand-500 bg-brand-500/10' : 'border-slate-600 hover:border-slate-400 hover:bg-slate-800/50'}`}
@@ -416,86 +520,84 @@ export default function LandingPage() {
                             </div>
                         </div>
                     )}
-                    
-                    {demoResult && (
-                        <div className="mt-8 text-center bg-brand-500/10 border border-brand-500/20 rounded-xl p-6">
-                            <h4 className="text-xl font-semibold text-white mb-2">Impressed? Let's save this receipt.</h4>
-                            <p className="text-slate-400 mb-6">Create a free account to track your expenses, view analytics, and manage budgets.</p>
-                            <Link href="/signup" className="btn-glow px-8 py-3 rounded-full bg-white text-dark-900 font-bold hover:scale-105 transition-transform inline-block">
-                                Create Free Account
-                            </Link>
+                </div>
+
+                {/* Workflow Summary */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center pt-8 border-t border-white/5">
+                    <div>
+                        <div className="w-12 h-12 rounded-full bg-brand-500/20 mx-auto flex items-center justify-center border border-brand-500/30 text-brand-400 mb-4">
+                            <span className="material-symbols-rounded">cloud_upload</span>
                         </div>
-                    )}
+                        <h4 className="text-white font-bold mb-2">1. Snap & Upload</h4>
+                        <p className="text-sm text-slate-400">Take a photo in any language or currency. No manual entry needed.</p>
+                    </div>
+                    <div>
+                        <div className="w-12 h-12 rounded-full bg-blue-500/20 mx-auto flex items-center justify-center border border-blue-500/30 text-blue-400 mb-4">
+                            <span className="material-symbols-rounded">psychology</span>
+                        </div>
+                        <h4 className="text-white font-bold mb-2">2. AI Parsing</h4>
+                        <p className="text-sm text-slate-400">Our Gemini model extracts line items, totals, dates, and assigns categories.</p>
+                    </div>
+                    <div>
+                        <div className="w-12 h-12 rounded-full bg-purple-500/20 mx-auto flex items-center justify-center border border-purple-500/30 text-purple-400 mb-4">
+                            <span className="material-symbols-rounded">monitoring</span>
+                        </div>
+                        <h4 className="text-white font-bold mb-2">3. Track & Save</h4>
+                        <p className="text-sm text-slate-400">Everything syncs to your dashboard to give you real-time financial insights.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        {/* Features Showcase (Dashboard Preview) */}
-        <section id="features" className="py-24 relative z-10 bg-slate-900/30 border-y border-white/5">
+        {/* Live Demo / Product Tour (Features) */}
+        <section id="demo" className="py-24 relative z-10">
             <div className="max-w-[1280px] mx-auto px-6">
-                <div className="text-center mb-20">
-                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Everything you need for<br/><span className="text-gradient">total financial clarity</span></h2>
-                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Once logged in, Lekha Tracker provides a powerful dashboard specifically designed to help you analyze your spending habits effortlessly.</p>
+                <div className="text-center mb-16">
+                    <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Interactive Product Tour</h2>
+                    <p className="text-slate-400 text-lg max-w-[672px] mx-auto font-sans">Once your receipts are scanned, Lekha Tracker provides a powerful dashboard to analyze your spending.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Feature 1 */}
-                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-400/20 to-blue-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-brand-400 text-2xl">dashboard</span>
-                        </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Bento-style Dashboard</h3>
-                        <p className="text-slate-400 mb-6 relative z-10 font-sans">A beautiful, at-a-glance dashboard that shows your total spent, remaining budget, average spend per receipt, and top merchants.</p>
-                        <ul className="space-y-3 mb-8">
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-brand-400 text-[18px]">check_circle</span> Real-time budget tracking</li>
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-brand-400 text-[18px]">check_circle</span> Top categories breakdown</li>
-                        </ul>
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Left: Tab selectors */}
+                    <div className="flex flex-col gap-3 lg:w-1/3">
+                        {features.map((feature, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setActiveFeature(idx)}
+                                className={`text-left p-6 rounded-2xl border transition-all duration-300 ${
+                                    activeFeature === idx 
+                                    ? 'bg-slate-800 border-white/20 shadow-xl scale-[1.02]' 
+                                    : 'glass border-white/5 hover:bg-slate-800/50 hover:border-white/10'
+                                }`}
+                            >
+                                <div className="flex items-center gap-4 mb-3">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${feature.bgColor} ${feature.borderColor}`}>
+                                        <span className={`material-symbols-rounded ${feature.color}`}>{feature.icon}</span>
+                                    </div>
+                                    <h3 className="text-white font-bold text-lg">{feature.title}</h3>
+                                </div>
+                                <p className={`text-sm transition-colors duration-300 ${activeFeature === idx ? 'text-slate-300' : 'text-slate-500'}`}>
+                                    {feature.description}
+                                </p>
+                            </button>
+                        ))}
                     </div>
 
-                    {/* Feature 2 */}
-                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400/20 to-purple-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-blue-400 text-2xl">currency_exchange</span>
+                    {/* Right: Mock UI Preview Panel */}
+                    <div className="lg:w-2/3 glass-panel rounded-3xl border border-white/10 p-8 shadow-2xl relative overflow-hidden min-h-[400px] flex flex-col justify-center">
+                        {/* Background subtle glow based on active feature */}
+                        <div className={`absolute top-0 right-0 w-64 h-64 blur-3xl opacity-30 rounded-full transition-colors duration-700 ${features[activeFeature].bgColor.replace('/20', '/40')}`}></div>
+                        
+                        <div className="relative z-10 w-full animate-fade-in" key={activeFeature}>
+                            {features[activeFeature].mockUi}
                         </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Multi-Currency Support</h3>
-                        <p className="text-slate-400 mb-6 relative z-10 font-sans">Travel a lot? Scan receipts in Euros, Dollars, or SEK. Lekha Tracker automatically converts all amounts to your preferred base currency so your budget stays perfectly accurate.</p>
-                        <ul className="space-y-3 mb-8">
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-blue-400 text-[18px]">check_circle</span> Live exchange rates</li>
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-blue-400 text-[18px]">check_circle</span> Select base currency in settings</li>
-                        </ul>
-                    </div>
-
-                    {/* Feature 3 */}
-                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400/20 to-pink-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-purple-400 text-2xl">tips_and_updates</span>
-                        </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Smart AI Insights</h3>
-                        <p className="text-slate-400 mb-6 relative z-10 font-sans">The AI doesn't just read receipts—it analyzes your habits. Get personalized suggestions on where to cut back, identify subscription traps, and optimize your spending.</p>
-                        <ul className="space-y-3 mb-8">
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-purple-400 text-[18px]">check_circle</span> Personalized saving tips</li>
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-purple-400 text-[18px]">check_circle</span> Monthly trend analysis</li>
-                        </ul>
-                    </div>
-
-                    {/* Feature 4 */}
-                    <div className="glass-panel rounded-3xl p-8 card-hover flex flex-col relative overflow-hidden group">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400/20 to-teal-500/20 flex items-center justify-center border border-white/10 mb-6 relative z-10">
-                            <span className="material-symbols-rounded text-green-400 text-2xl">manage_search</span>
-                        </div>
-                        <h3 className="font-display text-2xl font-bold text-white mb-4 relative z-10">Advanced Search & Filters</h3>
-                        <p className="text-slate-400 mb-6 relative z-10 font-sans">Find exactly what you're looking for. Search not just by merchant, but by specific line items across all your receipts (e.g. "Coffee" or "Laptop").</p>
-                        <ul className="space-y-3 mb-8">
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-green-400 text-[18px]">check_circle</span> Item-level search queries</li>
-                            <li className="flex items-center gap-2 text-sm text-slate-300"><span className="material-symbols-rounded text-green-400 text-[18px]">check_circle</span> Filter by date and category</li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-24 relative z-10">
+        <section className="py-24 relative z-10 bg-slate-900/30 border-t border-white/5">
             <div className="max-w-[800px] mx-auto px-6">
                 <div className="text-center mb-16">
                     <h2 className="font-display text-3xl md:text-5xl font-bold text-white mb-6">Frequently Asked Questions</h2>
