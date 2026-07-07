@@ -12,8 +12,10 @@ export default function LandingPage() {
   const [demoError, setDemoError] = useState<string | null>(null);
   const [demoPreview, setDemoPreview] = useState<string | null>(null);
   
+  const [showCamera, setShowCamera] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   // FAQ State
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -67,6 +69,50 @@ export default function LandingPage() {
       setDemoError(err.message || 'Something went wrong.');
     } finally {
       setDemoLoading(false);
+    }
+  };
+
+  const startCamera = async () => {
+    setShowCamera(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' } 
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      console.error("Camera access denied or unavailable", err);
+      alert("Camera access denied or unavailable. Please check permissions.");
+      setShowCamera(false);
+    }
+  };
+
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setShowCamera(false);
+  };
+
+  const takeSnapshot = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "camera-receipt.jpg", { type: "image/jpeg" });
+            stopCamera();
+            handleFileChange(file);
+          }
+        }, 'image/jpeg', 0.9);
+      }
     }
   };
 
@@ -387,6 +433,39 @@ export default function LandingPage() {
                     </div>
                 </div>
             </div>
+            {/* Camera Modal */}
+            {showCamera && (
+                <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
+                    <div className="relative w-full max-w-2xl bg-black rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/20">
+                        <video 
+                            ref={videoRef} 
+                            autoPlay 
+                            playsInline 
+                            className="w-full h-[60vh] object-cover bg-black"
+                        ></video>
+                        <canvas ref={canvasRef} className="hidden"></canvas>
+                        
+                        <div className="absolute bottom-0 w-full p-6 flex justify-between items-center bg-gradient-to-t from-black/80 to-transparent">
+                            <button 
+                                onClick={stopCamera}
+                                className="px-6 py-2 rounded-full bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            
+                            <button 
+                                onClick={takeSnapshot}
+                                className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-4 border-gray-300 hover:scale-105 transition-transform"
+                                title="Take Photo"
+                            >
+                                <div className="w-12 h-12 rounded-full border-2 border-black"></div>
+                            </button>
+                            
+                            <div className="w-20"></div> {/* Spacer for centering */}
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
 
         {/* How It Works (Now includes the Interactive AI Demo) */}
@@ -421,22 +500,10 @@ export default function LandingPage() {
                                     }
                                 }}
                             />
-                            <input 
-                                type="file" 
-                                accept="image/*" 
-                                capture="environment"
-                                className="hidden" 
-                                ref={cameraInputRef}
-                                onChange={(e) => {
-                                    if (e.target.files && e.target.files[0]) {
-                                        handleFileChange(e.target.files[0]);
-                                    }
-                                }}
-                            />
                             
                             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
                                 <button 
-                                    onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
+                                    onClick={(e) => { e.stopPropagation(); startCamera(); }}
                                     className="px-6 py-3 rounded-full bg-brand-600 hover:bg-brand-500 text-white font-medium shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center gap-2"
                                 >
                                     <span className="material-symbols-rounded text-[20px]">photo_camera</span>
